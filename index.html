@@ -7,7 +7,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-                    /* Loading Screen */
+        /* Base Styles */
+        :root {
+            --pastel-yellow: #FFF8E1;
+            --pastel-blue: #BBDEFB;
+            --pastel-pink: #FFCDD2;
+            --pastel-mint: #E8F5E9;
+            --pastel-orange: #FFB74D;
+            --pastel-purple: #5C6BC0;
+            --pastel-cyan: #E1F5FE;
+            --pastel-peach: #FFCCBC;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--pastel-yellow);
+            color: var(--pastel-purple);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -55,38 +81,17 @@
             width: 0%;
             background: linear-gradient(to right, var(--pastel-blue), var(--pastel-purple));
             border-radius: 8px;
-            animation: loading 3s ease-in-out;
-            animation-fill-mode: forwards;
+            animation: loading 2s ease-in-out forwards;
         }
         
         @keyframes loading {
             0% { width: 0%; }
             100% { width: 100%; }
         }
-        /* Base Styles */
-        :root {
-            --pastel-yellow: #FFF8E1;
-            --pastel-blue: #BBDEFB;
-            --pastel-pink: #FFCDD2;
-            --pastel-mint: #E8F5E9;
-            --pastel-orange: #FFB74D;
-            --pastel-purple: #5C6BC0;
-            --pastel-cyan: #E1F5FE;
-            --pastel-peach: #FFCCBC;
-        }
         
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Baloo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--pastel-yellow);
-            color: var(--pastel-purple);
-            line-height: 1.6;
-            overflow-x: hidden;
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
         
         .app-container {
@@ -115,6 +120,610 @@
         .logo i {
             margin-right: 10px;
             color: var(--pastel-orange);
+        }
+
+        /* Profile Button Styles */
+        .profile-button {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            background: var(--pastel-blue);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-left: 20px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .profile-avatar-mini {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .profile-level-indicator {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background: var(--pastel-orange);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid white;
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Profile Modal Styles */
+        .profile-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 900px;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow: auto;
+            border: 5px solid var(--pastel-blue);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--pastel-pink);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 18px;
+        }
+        
+        .profile-header {
+            padding: 25px 30px;
+            background: var(--pastel-blue);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .profile-username {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .profile-title {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        
+        .profile-level-badge {
+            background: white;
+            color: var(--pastel-purple);
+            padding: 5px 12px;
+            border-radius: 15px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .profile-stats-summary {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .profile-stat {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px 18px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+        }
+        
+        .profile-stat i {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .profile-stat span {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .profile-stat .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .profile-content {
+            padding: 0 30px 30px;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin: 0 -30px 20px;
+            padding: 0 30px;
+        }
+        
+        .profile-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #7986CB;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-tab.active {
+            color: var(--pastel-purple);
+        }
+        
+        .profile-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--pastel-blue);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .profile-tab-content {
+            display: none;
+        }
+        
+        .profile-tab-content.active {
+            display: block;
+        }
+        
+        /* Avatar Customization */
+        .avatar-customize-area {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .avatar-preview {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .avatar-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .avatar-figure {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            z-index: 2;
+        }
+        
+        .avatar-accessory {
+            position: absolute;
+            font-size: 50px;
+            z-index: 3;
+        }
+        
+        .avatar-accessory.hat {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .avatar-accessory.glasses {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -10%);
+        }
+        
+        .avatar-options {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            max-height: 500px;
+            padding-right: 10px;
+        }
+        
+        .option-section {
+            background: #f5f8fa;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid var(--pastel-blue);
+        }
+        
+        .option-title {
+            margin-bottom: 15px;
+            color: var(--pastel-purple);
+            font-size: 18px;
+        }
+        
+        .option-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .option-item {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option-item:hover {
+            transform: scale(1.1);
+        }
+        
+        .option-item.active {
+            border-color: var(--pastel-orange);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+        }
+        
+        .option-item.background {
+            font-size: 0;
+        }
+        
+        /* Titles Styles */
+        .titles-container {
+            padding: 20px 0;
+        }
+        
+        .current-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--pastel-purple);
+            padding: 15px;
+            background: #f5f8fa;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 2px solid var(--pastel-blue);
+        }
+        
+        .titles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .title-item {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+            border: 2px solid var(--pastel-blue);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .title-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .title-item.active {
+            border-color: var(--pastel-orange);
+            background: #FFF8E1;
+        }
+        
+        .title-item.locked {
+            opacity: 0.6;
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+        
+        .title-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--pastel-purple);
+            margin-bottom: 5px;
+        }
+        
+        .title-desc {
+            color: #7986CB;
+            font-size: 14px;
+        }
+        
+        .title-lock {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #9E9E9E;
+            font-size: 18px;
+        }
+        
+        /* Achievements Styles */
+        .achievements-container {
+            padding: 20px 0;
+        }
+        
+        .level-progress {
+            background: #f5f8fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid var(--pastel-blue);
+        }
+        
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .current-level, .next-level {
+            font-weight: bold;
+            color: var(--pastel-purple);
+        }
+        
+        .xp-bar-container {
+            height: 15px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .xp-bar {
+            height: 100%;
+            background: var(--pastel-orange);
+            background-image: linear-gradient(to right, var(--pastel-orange), #FFA726);
+            border-radius: 8px;
+        }
+        
+        .xp-info {
+            text-align: center;
+            color: #7986CB;
+            font-size: 14px;
+        }
+        
+        .achievements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .achievement-row {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .achievement-row:hover {
+            transform: translateX(5px);
+        }
+        
+        .achievement-row.achieved {
+            border-left: 5px solid #66BB6A;
+        }
+        
+        .achievement-row.in-progress {
+            border-left: 5px solid var(--pastel-orange);
+        }
+        
+        .achievement-row.locked {
+            border-left: 5px solid #9E9E9E;
+            opacity: 0.7;
+        }
+        
+        .achievement-icon {
+            font-size: 30px;
+            margin-right: 15px;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .achievement-details {
+            flex: 1;
+        }
+        
+        .achievement-name {
+            font-weight: bold;
+            color: var(--pastel-purple);
+            margin-bottom: 2px;
+        }
+        
+        .achievement-desc {
+            color: #7986CB;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .achievement-progress {
+            margin-top: 8px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--pastel-orange);
+            border-radius: 4px;
+        }
+        
+        .progress-text {
+            text-align: right;
+            font-size: 12px;
+            color: #7986CB;
+        }
+        
+        .achievement-reward {
+            background: #FFF9C4;
+            color: #FFA726;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        /* Stats Styles */
+        .stats-container {
+            padding: 20px 0;
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-stat-large {
+            background: #f5f8fa;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid var(--pastel-blue);
+        }
+        
+        .summary-stat-large .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--pastel-purple);
+            margin-bottom: 5px;
+        }
+        
+        .summary-stat-large .stat-label {
+            color: #7986CB;
+        }
+        
+        .stats-list {
+            margin-bottom: 30px;
+        }
+        
+        .stat-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .stat-item-row .stat-label {
+            color: #7986CB;
+        }
+        
+        .stat-item-row .stat-value {
+            color: var(--pastel-purple);
+            font-weight: bold;
+        }
+        
+        .activity-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+        
+        .timeline-date {
+            min-width: 100px;
+            color: #7986CB;
+            font-weight: 500;
+        }
+        
+        .timeline-title {
+            font-weight: bold;
+            color: var(--pastel-purple);
+            margin-bottom: 3px;
+        }
+        
+        .timeline-desc {
+            color: #7986CB;
+            font-size: 14px;
         }
 
         /* Dashboard Stats */
@@ -201,6 +810,70 @@
         .view-btn:hover {
             background: var(--pastel-cyan);
             transform: translateY(-2px);
+        }
+
+        /* Search and filters */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-tab {
+            padding: 10px 20px;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .nav-tab:hover {
+            background: var(--pastel-cyan);
+        }
+        
+        .nav-tab.active {
+            background: var(--pastel-blue);
+            border-color: var(--pastel-purple);
+            color: white;
+        }
+        
+        .search-section {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--pastel-blue);
+            font-size: 16px;
+            font-family: 'Baloo 2', sans-serif;
+            outline: none;
+        }
+        
+        .search-input:focus {
+            border-color: var(--pastel-purple);
+        }
+        
+        .filter-btn {
+            padding: 12px 20px;
+            background: var(--pastel-blue);
+            border: none;
+            border-radius: 25px;
+            color: var(--pastel-purple);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Baloo 2', sans-serif;
+            font-size: 16px;
+        }
+        
+        .filter-btn:hover {
+            background: #90CAF9;
         }
 
         /* Contact View Styles */
@@ -431,19 +1104,6 @@
         }
 
         /* Pet Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
         .pet-modal {
             position: fixed;
             top: 50%;
@@ -461,23 +1121,6 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             display: flex;
-        }
-        
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--pastel-pink);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 10;
-            font-size: 18px;
         }
         
         .pet-details {
@@ -536,301 +1179,31 @@
             margin: 20px 0;
             animation: bounce 4s ease-in-out infinite;
         }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(-15px); }
+
+        /* GitHub corner */
+        .github-corner {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 100;
         }
         
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
+        .github-corner svg {
+            fill: var(--pastel-purple);
+            color: var(--pastel-yellow);
         }
         
-        .stat-item {
-            background: #f5f8fa;
-            padding: 15px;
-            border-radius: 15px;
-            border: 2px solid var(--pastel-blue);
+        .github-corner:hover .octo-arm {
+            animation: octocat-wave 560ms ease-in-out;
         }
         
-        .stat-label {
-            font-size: 14px;
-            color: #7986CB;
+        @keyframes octocat-wave {
+            0%, 100% { transform: rotate(0); }
+            20%, 60% { transform: rotate(-25deg); }
+            40%, 80% { transform: rotate(10deg); }
         }
         
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 5px;
-            color: var(--pastel-purple);
-        }
-        
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin: 25px 0 15px;
-            color: var(--pastel-purple);
-            border-bottom: 2px dashed var(--pastel-pink);
-            padding-bottom: 8px;
-        }
-        
-        .activity-log {
-            background: #f5f8fa;
-            padding: 15px;
-            border-radius: 15px;
-            max-height: 180px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            border: 2px solid var(--pastel-blue);
-        }
-        
-        .log-entry {
-            padding: 10px 0;
-            font-size: 15px;
-            border-bottom: 1px solid #e5e9f2;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .time-stamp {
-            color: #7986CB;
-            font-size: 13px;
-        }
-        
-        .task-list {
-            margin-bottom: 30px;
-        }
-        
-        .task-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            padding: 10px;
-            background: white;
-            border-radius: 15px;
-            border: 1px solid #E0E0E0;
-            transition: all 0.2s ease;
-        }
-        
-        .task-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-        
-        .task-checkbox {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            border: 2px solid #BBDEFB;
-            margin-right: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        
-        .task-complete .task-checkbox {
-            background: #00BFA5;
-            border-color: #00BFA5;
-            color: white;
-        }
-        
-        .task-text {
-            flex: 1;
-            font-size: 16px;
-        }
-        
-        .task-reward {
-            font-size: 13px;
-            background: #FFF9C4;
-            color: #FFA726;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-left: 10px;
-        }
-        
-        .task-complete .task-text {
-            text-decoration: line-through;
-            color: #9E9E9E;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .action-btn {
-            flex: 1;
-            min-width: 120px;
-            padding: 14px;
-            background: var(--pastel-blue);
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            color: var(--pastel-purple);
-            font-weight: bold;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .action-btn i {
-            margin-right: 8px;
-        }
-        
-        .action-btn:hover {
-            background: #90CAF9;
-            transform: scale(1.05);
-        }
-        
-        .primary-btn {
-            background: #F48FB1;
-            color: white;
-        }
-        
-        .primary-btn:hover {
-            background: #F06292;
-        }
-        
-        .accessories-section {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .accessory-items {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .accessory {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-            cursor: pointer;
-            font-size: 24px;
-            transition: all 0.2s ease;
-            border: 2px dashed var(--pastel-pink);
-        }
-        
-        .accessory:hover {
-            transform: scale(1.15);
-            background: #FFF9C4;
-        }
-        
-        .accessory.active {
-            border: 2px solid var(--pastel-orange);
-            background: #FFF9C4;
-        }
-        
-        .achievements-section {
-            text-align: center;
-            margin: 30px 0;
-        }
-        
-        .achievements-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .achievement-badge {
-            width: 60px;
-            height: 60px;
-            background: #f5f8fa;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-            position: relative;
-            border: 2px solid var(--pastel-blue);
-        }
-        
-        .achievement-badge.locked {
-            opacity: 0.5;
-            filter: grayscale(1);
-        }
-        
-        .achievement-badge::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--pastel-purple);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-        
-        .achievement-badge:hover::after {
-            opacity: 1;
-        }
-        
-        .search-section {
-            margin-bottom: 30px;
-            display: flex;
-            gap: 15px;
-        }
-        
-        .search-input {
-            flex: 1;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: 2px solid var(--pastel-blue);
-            font-size: 16px;
-            font-family: 'Baloo 2', sans-serif;
-            outline: none;
-        }
-        
-        .search-input:focus {
-            border-color: var(--pastel-purple);
-        }
-        
-        .filter-btn {
-            padding: 12px 20px;
-            background: var(--pastel-blue);
-            border: none;
-            border-radius: 25px;
-            color: var(--pastel-purple);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Baloo 2', sans-serif;
-            font-size: 16px;
-        }
-        
-        .filter-btn:hover {
-            background: #90CAF9;
-        }
-        
+        /* Intro Banner */
         .intro-banner {
             background: white;
             border-radius: 20px;
@@ -869,323 +1242,6 @@
             transform: scale(1.05);
         }
         
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .nav-tab {
-            padding: 10px 20px;
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-        
-        .nav-tab:hover {
-            background: var(--pastel-cyan);
-        }
-        
-        .nav-tab.active {
-            background: var(--pastel-blue);
-            border-color: var(--pastel-purple);
-            color: white;
-        }
-        
-        /* GitHub corner */
-        .github-corner {
-            position: fixed;
-            top: 0;
-            right: 0;
-            z-index: 100;
-        }
-        
-        .github-corner svg {
-            fill: var(--pastel-purple);
-            color: var(--pastel-yellow);
-        }
-        
-        .github-corner:hover .octo-arm {
-            animation: octocat-wave 560ms ease-in-out;
-        }
-        
-        @keyframes octocat-wave {
-            0%, 100% { transform: rotate(0); }
-            20%, 60% { transform: rotate(-25deg); }
-            40%, 80% { transform: rotate(10deg); }
-        }
-        
-        /* Company Modal Styles */
-        .company-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px;
-            max-width: 90vw;
-            max-height: 90vh;
-            background: white;
-            border-radius: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            z-index: 1000;
-            border: 5px solid var(--pastel-blue);
-            overflow: auto;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            display: none;
-        }
-
-        .company-details {
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .company-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px dashed var(--pastel-pink);
-            padding-bottom: 15px;
-        }
-
-        .company-modal-name {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--pastel-purple);
-        }
-
-        .company-modal-type {
-            background: var(--pastel-orange);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 16px;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
-        }
-
-        .company-summary {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-
-        .summary-item {
-            flex: 1;
-            text-align: center;
-            padding: 15px;
-            background: #f5f8fa;
-            border-radius: 15px;
-            margin: 0 10px;
-            border: 2px solid var(--pastel-blue);
-        }
-
-        .summary-icon {
-            font-size: 24px;
-            color: var(--pastel-orange);
-            margin-bottom: 10px;
-        }
-
-        .summary-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--pastel-purple);
-        }
-
-        .summary-label {
-            font-size: 14px;
-            color: #7986CB;
-            margin-top: 5px;
-        }
-
-        .activity-tabs {
-            display: flex;
-            border-bottom: 2px solid #e0e0e0;
-            margin-bottom: 15px;
-            overflow-x: auto;
-        }
-
-        .activity-tab {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #7986CB;
-            position: relative;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .activity-tab.active {
-            color: var(--pastel-purple);
-        }
-
-        .activity-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--pastel-blue);
-            border-radius: 3px 3px 0 0;
-        }
-
-        .filter-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .filter-label {
-            font-weight: 600;
-            color: #7986CB;
-            margin-right: 10px;
-        }
-
-        .filter-dropdown {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 10px;
-        }
-
-        .filter-dropdown:hover {
-            background: #f5f8fa;
-            border-color: var(--pastel-blue);
-        }
-
-        .filter-text {
-            margin-right: 10px;
-            color: var(--pastel-purple);
-        }
-
-        .activity-content {
-            display: none;
-            max-height: 350px;
-            overflow-y: auto;
-            margin-bottom: 30px;
-        }
-
-        .activity-content.active {
-            display: block;
-        }
-
-        .activity-item {
-            display: flex;
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-
-        .activity-item:hover {
-            background: #f5f8fa;
-        }
-
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
-            flex-shrink: 0;
-            color: white;
-        }
-
-        .email-icon {
-            background: #64B5F6;
-        }
-
-        .call-icon {
-            background: #81C784;
-        }
-
-        .meeting-icon {
-            background: #FFB74D;
-        }
-
-        .task-icon {
-            background: #7986CB;
-        }
-
-        .note-icon {
-            background: #4DB6AC;
-        }
-
-        .deal-icon {
-            background: #F06292;
-        }
-
-        .activity-details {
-            flex: 1;
-        }
-
-        .activity-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--pastel-purple);
-        }
-
-        .activity-time {
-            font-size: 13px;
-            color: #7986CB;
-            margin-bottom: 5px;
-        }
-
-        .activity-preview {
-            font-size: 14px;
-            color: #616161;
-        }
-
-        .company-contacts {
-            margin-top: 30px;
-        }
-
-        .contacts-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .contact-mini {
-            display: flex;
-            align-items: center;
-            background: white;
-            padding: 10px 15px;
-            border-radius: 15px;
-            border: 2px solid var(--pastel-pink);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .contact-mini:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
-
-        .contact-mini-icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        .contact-mini-name {
-            font-weight: 600;
-            color: var(--pastel-purple);
-        }
-        
         /* Responsive styles */
         @media (max-width: 768px) {
             .pet-modal {
@@ -1201,10 +1257,6 @@
                 padding: 20px 30px;
             }
             
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .contact-grid {
                 grid-template-columns: 1fr;
             }
@@ -1214,621 +1266,29 @@
                 align-items: flex-start;
             }
             
-            .company-summary {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .summary-item {
-                margin: 0;
-            }
-            
-            .activity-tabs {
-                gap: 5px;
-            }
-            
-            .activity-tab {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-                        /* Profile Button Styles */
-            .profile-button {
-                position: relative;
-                width: 45px;
-                height: 45px;
-                background: var(--pastel-blue);
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                margin-left: 20px;
-                box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-                transition: all 0.3s ease;
-            }
-            
-            .profile-button:hover {
-                transform: scale(1.05);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            }
-            
-            .profile-avatar-mini {
-                font-size: 24px;
-                color: white;
-            }
-            
-            .profile-level-indicator {
-                position: absolute;
-                bottom: -5px;
-                right: -5px;
-                background: var(--pastel-orange);
-                color: white;
-                width: 22px;
-                height: 22px;
-                border-radius: 50%;
-                font-size: 12px;
-                font-weight: bold;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 2px solid white;
-            }
-            
-            /* Profile Modal Styles */
-            .profile-modal {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 900px;
-                max-width: 90vw;
-                max-height: 90vh;
-                background: white;
-                border-radius: 25px;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-                z-index: 1000;
-                border: 5px solid var(--pastel-blue);
-                overflow: auto;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                display: none;
-            }
-            
             .profile-header {
-                padding: 25px 30px;
-                background: var(--pastel-blue);
-                color: white;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 20px;
-            }
-            
-            .profile-info {
-                display: flex;
                 flex-direction: column;
-            }
-            
-            .profile-username {
-                font-size: 28px;
-                font-weight: bold;
-                margin-bottom: 5px;
-            }
-            
-            .profile-title {
-                font-size: 18px;
-                opacity: 0.8;
-                margin-bottom: 10px;
-            }
-            
-            .profile-level-badge {
-                background: white;
-                color: var(--pastel-purple);
-                padding: 5px 12px;
-                border-radius: 15px;
-                display: inline-block;
-                font-weight: bold;
-                font-size: 14px;
-                box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+                align-items: flex-start;
             }
             
             .profile-stats-summary {
-                display: flex;
-                gap: 15px;
+                width: 100%;
+                justify-content: space-between;
             }
             
-            .profile-stat {
-                background: rgba(255, 255, 255, 0.2);
-                padding: 12px 18px;
-                border-radius: 12px;
-                display: flex;
+            .avatar-customize-area {
                 flex-direction: column;
                 align-items: center;
-                min-width: 80px;
-            }
-            
-            .profile-stat i {
-                font-size: 22px;
-                margin-bottom: 5px;
-            }
-            
-            .profile-stat span {
-                font-size: 20px;
-                font-weight: bold;
-                line-height: 1;
-            }
-            
-            .profile-stat .stat-label {
-                font-size: 12px;
-                opacity: 0.8;
-                margin-top: 5px;
-            }
-            
-            .profile-content {
-                padding: 0 30px 30px;
-            }
-            
-            .profile-tabs {
-                display: flex;
-                border-bottom: 2px solid #e0e0e0;
-                margin: 0 -30px 20px;
-                padding: 0 30px;
-            }
-            
-            .profile-tab {
-                padding: 15px 25px;
-                cursor: pointer;
-                font-weight: 600;
-                color: #7986CB;
-                position: relative;
-                transition: all 0.3s ease;
-            }
-            
-            .profile-tab.active {
-                color: var(--pastel-purple);
-            }
-            
-            .profile-tab.active::after {
-                content: '';
-                position: absolute;
-                bottom: -2px;
-                left: 0;
-                width: 100%;
-                height: 3px;
-                background: var(--pastel-blue);
-                border-radius: 3px 3px 0 0;
-            }
-            
-            .profile-tab-content {
-                display: none;
-            }
-            
-            .profile-tab-content.active {
-                display: block;
-            }
-            
-            /* Avatar Customization */
-            .avatar-customize-area {
-                display: flex;
-                gap: 30px;
-                margin-top: 20px;
             }
             
             .avatar-preview {
-                width: 200px;
-                height: 200px;
-                border-radius: 50%;
-                position: relative;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-                overflow: hidden;
-                flex-shrink: 0;
-            }
-            
-            .avatar-background {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 1;
-            }
-            
-            .avatar-figure {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 100px;
-                z-index: 2;
-            }
-            
-            .avatar-accessory {
-                position: absolute;
-                font-size: 50px;
-                z-index: 3;
-            }
-            
-            .avatar-accessory.hat {
-                top: 0;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-            
-            .avatar-accessory.glasses {
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -10%);
-            }
-            
-            .avatar-options {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                overflow-y: auto;
-                max-height: 500px;
-                padding-right: 10px;
-            }
-            
-            .option-section {
-                background: #f5f8fa;
-                padding: 15px;
-                border-radius: 15px;
-                border: 2px solid var(--pastel-blue);
-            }
-            
-            .option-title {
-                margin-bottom: 15px;
-                color: var(--pastel-purple);
-                font-size: 18px;
-            }
-            
-            .option-items {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 12px;
-            }
-            
-            .option-item {
-                width: 50px;
-                height: 50px;
-                background: white;
-                border-radius: 10px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-                cursor: pointer;
-                font-size: 24px;
-                transition: all 0.2s ease;
-                border: 2px solid transparent;
-            }
-            
-            .option-item:hover {
-                transform: scale(1.1);
-            }
-            
-            .option-item.active {
-                border-color: var(--pastel-orange);
-                box-shadow: 0 3px 12px rgba(0,0,0,0.2);
-            }
-            
-            .option-item.background {
-                font-size: 0;
-            }
-            
-            /* Titles Styles */
-            .titles-container {
-                padding: 20px 0;
-            }
-            
-            .current-title {
-                font-size: 24px;
-                font-weight: bold;
-                color: var(--pastel-purple);
-                padding: 15px;
-                background: #f5f8fa;
-                border-radius: 15px;
-                text-align: center;
-                margin-bottom: 30px;
-                border: 2px solid var(--pastel-blue);
+                margin-bottom: 20px;
             }
             
             .titles-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
+                grid-template-columns: 1fr;
             }
-            
-            .title-item {
-                background: white;
-                padding: 15px;
-                border-radius: 15px;
-                box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-                border: 2px solid var(--pastel-blue);
-                cursor: pointer;
-                position: relative;
-                transition: all 0.3s ease;
-            }
-            
-            .title-item:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-            }
-            
-            .title-item.active {
-                border-color: var(--pastel-orange);
-                background: #FFF8E1;
-            }
-            
-            .title-item.locked {
-                opacity: 0.6;
-                background: #f5f5f5;
-                cursor: not-allowed;
-            }
-            
-            .title-name {
-                font-weight: bold;
-                font-size: 18px;
-                color: var(--pastel-purple);
-                margin-bottom: 5px;
-            }
-            
-            .title-desc {
-                color: #7986CB;
-                font-size: 14px;
-            }
-            
-            .title-lock {
-                position: absolute;
-                top: 15px;
-                right: 15px;
-                color: #9E9E9E;
-                font-size: 18px;
-            }
-            
-            /* Achievements Styles */
-            .achievements-container {
-                padding: 20px 0;
-            }
-            
-            .level-progress {
-                background: #f5f8fa;
-                padding: 20px;
-                border-radius: 15px;
-                margin-bottom: 30px;
-                border: 2px solid var(--pastel-blue);
-            }
-            
-            .level-info {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 10px;
-            }
-            
-            .current-level, .next-level {
-                font-weight: bold;
-                color: var(--pastel-purple);
-            }
-            
-            .xp-bar-container {
-                height: 15px;
-                background: #e0e0e0;
-                border-radius: 8px;
-                overflow: hidden;
-                margin-bottom: 8px;
-            }
-            
-            .xp-bar {
-                height: 100%;
-                background: var(--pastel-orange);
-                background-image: linear-gradient(to right, var(--pastel-orange), #FFA726);
-                border-radius: 8px;
-            }
-            
-            .xp-info {
-                text-align: center;
-                color: #7986CB;
-                font-size: 14px;
-            }
-            
-            .achievements-list {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .achievement-row {
-                display: flex;
-                align-items: center;
-                padding: 15px;
-                background: white;
-                border-radius: 15px;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-                transition: all 0.3s ease;
-            }
-            
-            .achievement-row:hover {
-                transform: translateX(5px);
-            }
-            
-            .achievement-row.achieved {
-                border-left: 5px solid #66BB6A;
-            }
-            
-            .achievement-row.in-progress {
-                border-left: 5px solid var(--pastel-orange);
-            }
-            
-            .achievement-row.locked {
-                border-left: 5px solid #9E9E9E;
-                opacity: 0.7;
-            }
-            
-            .achievement-icon {
-                font-size: 30px;
-                margin-right: 15px;
-                width: 40px;
-                text-align: center;
-            }
-            
-            .achievement-details {
-                flex: 1;
-            }
-            
-            .achievement-name {
-                font-weight: bold;
-                color: var(--pastel-purple);
-                margin-bottom: 2px;
-            }
-            
-            .achievement-desc {
-                color: #7986CB;
-                font-size: 14px;
-                margin-bottom: 5px;
-            }
-            
-            .achievement-progress {
-                margin-top: 8px;
-            }
-            
-            .progress-bar {
-                height: 8px;
-                background: #e0e0e0;
-                border-radius: 4px;
-                overflow: hidden;
-                margin-bottom: 5px;
-            }
-            
-            .progress-fill {
-                height: 100%;
-                background: var(--pastel-orange);
-                border-radius: 4px;
-            }
-            
-            .progress-text {
-                text-align: right;
-                font-size: 12px;
-                color: #7986CB;
-            }
-            
-            .achievement-reward {
-                background: #FFF9C4;
-                color: #FFA726;
-                padding: 5px 10px;
-                border-radius: 10px;
-                font-weight: bold;
-                font-size: 14px;
-                margin-left: 10px;
-            }
-            
-            /* Stats Styles */
-            .stats-container {
-                padding: 20px 0;
-            }
-            
-            .stats-summary {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 20px;
-                margin-bottom: 30px;
-            }
-            
-            .summary-stat-large {
-                background: #f5f8fa;
-                padding: 20px;
-                border-radius: 15px;
-                text-align: center;
-                border: 2px solid var(--pastel-blue);
-            }
-            
-            .summary-stat-large .stat-value {
-                font-size: 36px;
-                font-weight: bold;
-                color: var(--pastel-purple);
-                margin-bottom: 5px;
-            }
-            
-            .summary-stat-large .stat-label {
-                color: #7986CB;
-            }
-            
-            .stats-list {
-                margin-bottom: 30px;
-            }
-            
-            .stat-item-row {
-                display: flex;
-                justify-content: space-between;
-                padding: 12px 0;
-                border-bottom: 1px solid #e0e0e0;
-            }
-            
-            .stat-item-row .stat-label {
-                color: #7986CB;
-            }
-            
-            .stat-item-row .stat-value {
-                color: var(--pastel-purple);
-                font-weight: bold;
-            }
-            
-            .activity-timeline {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .timeline-item {
-                display: flex;
-                gap: 15px;
-                padding-bottom: 15px;
-                border-bottom: 1px dashed #e0e0e0;
-            }
-            
-            .timeline-date {
-                min-width: 100px;
-                color: #7986CB;
-                font-weight: 500;
-            }
-            
-            .timeline-title {
-                font-weight: bold;
-                color: var(--pastel-purple);
-                margin-bottom: 3px;
-            }
-            
-            .timeline-desc {
-                color: #7986CB;
-                font-size: 14px;
-            }
-            
-            /* Responsive Adjustments */
-            @media (max-width: 768px) {
-                .profile-header {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-                
-                .profile-stats-summary {
-                    width: 100%;
-                    justify-content: space-between;
-                }
-                
-                .avatar-customize-area {
-                    flex-direction: column;
-                    align-items: center;
-                }
-                
-                .avatar-preview {
-                    margin-bottom: 20px;
-                }
-                
-                .titles-grid {
-                    grid-template-columns: 1fr;
-                }
-            }   
+        }
     </style>
 </head>
 <body>
@@ -1841,6 +1301,7 @@
             </div>
         </div>
     </div>
+    
     <!-- GitHub Corner -->
     <a href="https://avelydamcghee.github.io/hubspot-pet-companion-demo/" class="github-corner" aria-label="View source on GitHub" target="_blank">
         <svg width="80" height="80" viewBox="0 0 250 250" style="position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
@@ -1856,332 +1317,10 @@
                 <i class="fas fa-paw"></i> PetSpot Companion
             </div>
 
-                        <!-- Profile Button for Header -->
+            <!-- Profile Button for Header -->
             <div class="profile-button" id="profile-button">
                 <div class="profile-avatar-mini">👤</div>
                 <div class="profile-level-indicator">12</div>
-            </div>
-            
-            <!-- Profile Modal -->
-            <div class="profile-modal" id="profile-modal">
-                <div class="modal-close" id="profile-modal-close"><i class="fas fa-times"></i></div>
-                
-                <div class="profile-header">
-                    <div class="profile-info">
-                        <div class="profile-username">Sarah Johnson</div>
-                        <div class="profile-title">Email Champion</div>
-                        <div class="profile-level-badge">Level 12</div>
-                    </div>
-                    
-                    <div class="profile-stats-summary">
-                        <div class="profile-stat">
-                            <i class="fas fa-envelope"></i>
-                            <span>324</span>
-                            <div class="stat-label">Emails</div>
-                        </div>
-                        <div class="profile-stat">
-                            <i class="fas fa-phone-alt"></i>
-                            <span>89</span>
-                            <div class="stat-label">Calls</div>
-                        </div>
-                        <div class="profile-stat">
-                            <i class="fas fa-handshake"></i>
-                            <span>17</span>
-                            <div class="stat-label">Deals</div>
-                        </div>
-                        <div class="profile-stat">
-                            <i class="fas fa-calendar-check"></i>
-                            <span>42</span>
-                            <div class="stat-label">Meetings</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="profile-content">
-                    <div class="profile-tabs">
-                        <div class="profile-tab active" data-tab="avatar">Avatar</div>
-                        <div class="profile-tab" data-tab="titles">Titles</div>
-                        <div class="profile-tab" data-tab="achievements">Achievements</div>
-                        <div class="profile-tab" data-tab="stats">Stats</div>
-                    </div>
-                    
-                    <div class="profile-tab-content active" id="avatar-tab">
-                        <div class="avatar-customize-area">
-                            <div class="avatar-preview">
-                                <div class="avatar-background" style="background-color: var(--pastel-cyan);"></div>
-                                <div class="avatar-figure">👩‍💼</div>
-                                <div class="avatar-accessory hat">🎩</div>
-                                <div class="avatar-accessory glasses">👓</div>
-                            </div>
-                            
-                            <div class="avatar-options">
-                                <div class="option-section">
-                                    <h3 class="option-title">Base Avatar</h3>
-                                    <div class="option-items">
-                                        <div class="option-item active" data-type="base" data-value="👩‍💼">👩‍💼</div>
-                                        <div class="option-item" data-type="base" data-value="👨‍💼">👨‍💼</div>
-                                        <div class="option-item" data-type="base" data-value="👩‍🦰">👩‍🦰</div>
-                                        <div class="option-item" data-type="base" data-value="👨‍🦱">👨‍🦱</div>
-                                        <div class="option-item" data-type="base" data-value="👩‍🦳">👩‍🦳</div>
-                                        <div class="option-item" data-type="base" data-value="👨‍🦳">👨‍🦳</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="option-section">
-                                    <h3 class="option-title">Hats</h3>
-                                    <div class="option-items">
-                                        <div class="option-item active" data-type="hat" data-value="🎩">🎩</div>
-                                        <div class="option-item" data-type="hat" data-value="👒">👒</div>
-                                        <div class="option-item" data-type="hat" data-value="🧢">🧢</div>
-                                        <div class="option-item" data-type="hat" data-value="⛑️">⛑️</div>
-                                        <div class="option-item" data-type="hat" data-value="👑">👑</div>
-                                        <div class="option-item" data-type="hat" data-value="none">❌</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="option-section">
-                                    <h3 class="option-title">Glasses</h3>
-                                    <div class="option-items">
-                                        <div class="option-item active" data-type="glasses" data-value="👓">👓</div>
-                                        <div class="option-item" data-type="glasses" data-value="🕶️">🕶️</div>
-                                        <div class="option-item" data-type="glasses" data-value="🥽">🥽</div>
-                                        <div class="option-item" data-type="glasses" data-value="none">❌</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="option-section">
-                                    <h3 class="option-title">Background</h3>
-                                    <div class="option-items background-options">
-                                        <div class="option-item background active" data-type="background" data-value="var(--pastel-cyan)" style="background-color: var(--pastel-cyan);"></div>
-                                        <div class="option-item background" data-type="background" data-value="var(--pastel-blue)" style="background-color: var(--pastel-blue);"></div>
-                                        <div class="option-item background" data-type="background" data-value="var(--pastel-pink)" style="background-color: var(--pastel-pink);"></div>
-                                        <div class="option-item background" data-type="background" data-value="var(--pastel-mint)" style="background-color: var(--pastel-mint);"></div>
-                                        <div class="option-item background" data-type="background" data-value="var(--pastel-orange)" style="background-color: var(--pastel-orange);"></div>
-                                        <div class="option-item background" data-type="background" data-value="var(--pastel-purple)" style="background-color: var(--pastel-purple);"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-tab-content" id="titles-tab">
-                        <div class="titles-container">
-                            <h3 class="section-title">Current Title</h3>
-                            <div class="current-title">Email Champion</div>
-                            
-                            <h3 class="section-title">Available Titles</h3>
-                            <div class="titles-grid">
-                                <div class="title-item active" data-title="Email Champion">
-                                    <div class="title-name">Email Champion</div>
-                                    <div class="title-desc">Sent over 300 emails</div>
-                                </div>
-                                <div class="title-item" data-title="Deal Closer">
-                                    <div class="title-name">Deal Closer</div>
-                                    <div class="title-desc">Closed 15+ deals</div>
-                                </div>
-                                <div class="title-item" data-title="Follow-up Master">
-                                    <div class="title-name">Follow-up Master</div>
-                                    <div class="title-desc">Never missed a follow-up</div>
-                                </div>
-                                <div class="title-item" data-title="Social Butterfly">
-                                    <div class="title-name">Social Butterfly</div>
-                                    <div class="title-desc">Connected with 50+ contacts</div>
-                                </div>
-                                <div class="title-item" data-title="Pet Whisperer">
-                                    <div class="title-name">Pet Whisperer</div>
-                                    <div class="title-desc">Maintain 90%+ happiness for all pets</div>
-                                </div>
-                                <div class="title-item locked" data-title="Meeting Maven">
-                                    <div class="title-name">Meeting Maven</div>
-                                    <div class="title-desc">Schedule 50 meetings (42/50)</div>
-                                    <div class="title-lock"><i class="fas fa-lock"></i></div>
-                                </div>
-                                <div class="title-item locked" data-title="Cold Call King">
-                                    <div class="title-name">Cold Call King</div>
-                                    <div class="title-desc">Make 100 calls (89/100)</div>
-                                    <div class="title-lock"><i class="fas fa-lock"></i></div>
-                                </div>
-                                <div class="title-item locked" data-title="Top Earner">
-                                    <div class="title-name">Top Earner</div>
-                                    <div class="title-desc">Close $500K in deals ($342K/$500K)</div>
-                                    <div class="title-lock"><i class="fas fa-lock"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-tab-content" id="achievements-tab">
-                        <div class="achievements-container">
-                            <div class="level-progress">
-                                <div class="level-info">
-                                    <div class="current-level">Level 12</div>
-                                    <div class="next-level">Level 13</div>
-                                </div>
-                                <div class="xp-bar-container">
-                                    <div class="xp-bar" style="width: 75%;"></div>
-                                </div>
-                                <div class="xp-info">3,750 / 5,000 XP</div>
-                            </div>
-                            
-                            <h3 class="section-title">Achievements</h3>
-                            <div class="achievements-list">
-                                <div class="achievement-row achieved">
-                                    <div class="achievement-icon">🏆</div>
-                                    <div class="achievement-details">
-                                        <div class="achievement-name">First Steps</div>
-                                        <div class="achievement-desc">Make your first contact</div>
-                                    </div>
-                                    <div class="achievement-reward">+100 XP</div>
-                                </div>
-                                <div class="achievement-row achieved">
-                                    <div class="achievement-icon">📧</div>
-                                    <div class="achievement-details">
-                                        <div class="achievement-name">Email Expert</div>
-                                        <div class="achievement-desc">Send 300 emails</div>
-                                    </div>
-                                    <div class="achievement-reward">+500 XP</div>
-                                </div>
-                                <div class="achievement-row achieved">
-                                    <div class="achievement-icon">💰</div>
-                                    <div class="achievement-details">
-                                        <div class="achievement-name">Deal Master</div>
-                                        <div class="achievement-desc">Close 15 deals</div>
-                                    </div>
-                                    <div class="achievement-reward">+750 XP</div>
-                                </div>
-                                <div class="achievement-row achieved">
-                                    <div class="achievement-icon">🐶</div>
-                                    <div class="achievement-details">
-                                        <div class="achievement-name">Pet Collector</div>
-                                        <div class="achievement-desc">Have 20 pet contacts</div>
-                                    </div>
-                                    <div class="achievement-reward">+300 XP</div>
-                                </div>
-                                <div class="achievement-row in-progress">
-                                    <div class="achievement-icon">📱</div>
-                                    <div class="achievement-details">
-                                        <div class="achievement-name">Call Champion</div>
-                                        <div class="achievement-desc">Make 100 calls</div>
-                                        <div class="achievement-progress">
-                                            <div class="progress-bar">
-                                                <div class="progress-fill" style="width: 89%;"></div>
-                                            </div>
-                                            <div class="progress-text">89/100</div>
-                                        </div>
-                                    </div>
-                                    <div class="achievement-reward">+600 XP</div>
-                                </div>
-                                <div class="achievement-row in-progress">
-                                    <div class="achievement-icon">📅</div>
-                                    <div class="achievement-details">
-                                        <div class="achievement-name">Meeting Mastermind</div>
-                                        <div class="achievement-desc">Schedule 50 meetings</div>
-                                        <div class="achievement-progress">
-                                            <div class="progress-bar">
-                                                <div class="progress-fill" style="width: 84%;"></div>
-                                            </div>
-                                            <div class="progress-text">42/50</div>
-                                        </div>
-                                    </div>
-                                    <div class="achievement-reward">+400 XP</div>
-                                </div>
-                                <div class="achievement-row locked">
-                                    <div class="achievement-icon">👑</div>
-                                    <div class="achievement-details">
-                                        <div class="achievement-name">Sales Legend</div>
-                                        <div class="achievement-desc">Close $1M in deals</div>
-                                    </div>
-                                    <div class="achievement-reward">+2000 XP</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="profile-tab-content" id="stats-tab">
-                        <div class="stats-container">
-                            <div class="stats-summary">
-                                <div class="summary-stat-large">
-                                    <div class="stat-value">324</div>
-                                    <div class="stat-label">Emails Sent</div>
-                                </div>
-                                <div class="summary-stat-large">
-                                    <div class="stat-value">89</div>
-                                    <div class="stat-label">Calls Made</div>
-                                </div>
-                                <div class="summary-stat-large">
-                                    <div class="stat-value">42</div>
-                                    <div class="stat-label">Meetings Scheduled</div>
-                                </div>
-                                <div class="summary-stat-large">
-                                    <div class="stat-value">17</div>
-                                    <div class="stat-label">Deals Closed</div>
-                                </div>
-                            </div>
-                            
-                            <div class="stats-details">
-                                <h3 class="section-title">Performance Stats</h3>
-                                <div class="stats-list">
-                                    <div class="stat-item-row">
-                                        <div class="stat-label">Average Response Time</div>
-                                        <div class="stat-value">3.2 hours</div>
-                                    </div>
-                                    <div class="stat-item-row">
-                                        <div class="stat-label">Follow-up Rate</div>
-                                        <div class="stat-value">97%</div>
-                                    </div>
-                                    <div class="stat-item-row">
-                                        <div class="stat-label">Deal Conversion Rate</div>
-                                        <div class="stat-value">32%</div>
-                                    </div>
-                                    <div class="stat-item-row">
-                                        <div class="stat-label">Average Deal Size</div>
-                                        <div class="stat-value">$28,400</div>
-                                    </div>
-                                    <div class="stat-item-row">
-                                        <div class="stat-label">Total Revenue Generated</div>
-                                        <div class="stat-value">$482,800</div>
-                                    </div>
-                                    <div class="stat-item-row">
-                                        <div class="stat-label">Pet Happiness Average</div>
-                                        <div class="stat-value">82%</div>
-                                    </div>
-                                </div>
-                                
-                                <h3 class="section-title">Activity Timeline</h3>
-                                <div class="activity-timeline">
-                                    <div class="timeline-item">
-                                        <div class="timeline-date">Today</div>
-                                        <div class="timeline-content">
-                                            <div class="timeline-title">Sent 5 emails</div>
-                                            <div class="timeline-desc">+25 XP earned</div>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-date">Yesterday</div>
-                                        <div class="timeline-content">
-                                            <div class="timeline-title">Closed deal with TechSolutions</div>
-                                            <div class="timeline-desc">+150 XP earned</div>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-date">3 days ago</div>
-                                        <div class="timeline-content">
-                                            <div class="timeline-title">Reached Level 12</div>
-                                            <div class="timeline-desc">Unlocked title: Email Champion</div>
-                                        </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-date">Last week</div>
-                                        <div class="timeline-content">
-                                            <div class="timeline-title">Added 3 new contacts</div>
-                                            <div class="timeline-desc">+45 XP earned</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </header>
         
@@ -2419,8 +1558,332 @@
             </div>
         </div>
     
-        <!-- Pet Modal -->
+        <!-- Modal Overlay (shared between all modals) -->
         <div class="modal-overlay" id="modal-overlay"></div>
+        
+        <!-- Profile Modal -->
+        <div class="profile-modal" id="profile-modal">
+            <div class="modal-close" id="profile-modal-close"><i class="fas fa-times"></i></div>
+            
+            <div class="profile-header">
+                <div class="profile-info">
+                    <div class="profile-username">Sarah Johnson</div>
+                    <div class="profile-title">Email Champion</div>
+                    <div class="profile-level-badge">Level 12</div>
+                </div>
+                
+                <div class="profile-stats-summary">
+                    <div class="profile-stat">
+                        <i class="fas fa-envelope"></i>
+                        <span>324</span>
+                        <div class="stat-label">Emails</div>
+                    </div>
+                    <div class="profile-stat">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>89</span>
+                        <div class="stat-label">Calls</div>
+                    </div>
+                    <div class="profile-stat">
+                        <i class="fas fa-handshake"></i>
+                        <span>17</span>
+                        <div class="stat-label">Deals</div>
+                    </div>
+                    <div class="profile-stat">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>42</span>
+                        <div class="stat-label">Meetings</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-tabs">
+                    <div class="profile-tab active" data-tab="avatar">Avatar</div>
+                    <div class="profile-tab" data-tab="titles">Titles</div>
+                    <div class="profile-tab" data-tab="achievements">Achievements</div>
+                    <div class="profile-tab" data-tab="stats">Stats</div>
+                </div>
+                
+                <div class="profile-tab-content active" id="avatar-tab">
+                    <div class="avatar-customize-area">
+                        <div class="avatar-preview">
+                            <div class="avatar-background" style="background-color: var(--pastel-cyan);"></div>
+                            <div class="avatar-figure">👩‍💼</div>
+                            <div class="avatar-accessory hat">🎩</div>
+                            <div class="avatar-accessory glasses">👓</div>
+                        </div>
+                        
+                        <div class="avatar-options">
+                            <div class="option-section">
+                                <h3 class="option-title">Base Avatar</h3>
+                                <div class="option-items">
+                                    <div class="option-item active" data-type="base" data-value="👩‍💼">👩‍💼</div>
+                                    <div class="option-item" data-type="base" data-value="👨‍💼">👨‍💼</div>
+                                    <div class="option-item" data-type="base" data-value="👩‍🦰">👩‍🦰</div>
+                                    <div class="option-item" data-type="base" data-value="👨‍🦱">👨‍🦱</div>
+                                    <div class="option-item" data-type="base" data-value="👩‍🦳">👩‍🦳</div>
+                                    <div class="option-item" data-type="base" data-value="👨‍🦳">👨‍🦳</div>
+                                </div>
+                            </div>
+                            
+                            <div class="option-section">
+                                <h3 class="option-title">Hats</h3>
+                                <div class="option-items">
+                                    <div class="option-item active" data-type="hat" data-value="🎩">🎩</div>
+                                    <div class="option-item" data-type="hat" data-value="👒">👒</div>
+                                    <div class="option-item" data-type="hat" data-value="🧢">🧢</div>
+                                    <div class="option-item" data-type="hat" data-value="⛑️">⛑️</div>
+                                    <div class="option-item" data-type="hat" data-value="👑">👑</div>
+                                    <div class="option-item" data-type="hat" data-value="none">❌</div>
+                                </div>
+                            </div>
+                            
+                            <div class="option-section">
+                                <h3 class="option-title">Glasses</h3>
+                                <div class="option-items">
+                                    <div class="option-item active" data-type="glasses" data-value="👓">👓</div>
+                                    <div class="option-item" data-type="glasses" data-value="🕶️">🕶️</div>
+                                    <div class="option-item" data-type="glasses" data-value="🥽">🥽</div>
+                                    <div class="option-item" data-type="glasses" data-value="none">❌</div>
+                                </div>
+                            </div>
+                            
+                            <div class="option-section">
+                                <h3 class="option-title">Background</h3>
+                                <div class="option-items background-options">
+                                    <div class="option-item background active" data-type="background" data-value="var(--pastel-cyan)" style="background-color: var(--pastel-cyan);"></div>
+                                    <div class="option-item background" data-type="background" data-value="var(--pastel-blue)" style="background-color: var(--pastel-blue);"></div>
+                                    <div class="option-item background" data-type="background" data-value="var(--pastel-pink)" style="background-color: var(--pastel-pink);"></div>
+                                    <div class="option-item background" data-type="background" data-value="var(--pastel-mint)" style="background-color: var(--pastel-mint);"></div>
+                                    <div class="option-item background" data-type="background" data-value="var(--pastel-orange)" style="background-color: var(--pastel-orange);"></div>
+                                    <div class="option-item background" data-type="background" data-value="var(--pastel-purple)" style="background-color: var(--pastel-purple);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-tab-content" id="titles-tab">
+                    <div class="titles-container">
+                        <h3 class="section-title">Current Title</h3>
+                        <div class="current-title">Email Champion</div>
+                        
+                        <h3 class="section-title">Available Titles</h3>
+                        <div class="titles-grid">
+                            <div class="title-item active" data-title="Email Champion">
+                                <div class="title-name">Email Champion</div>
+                                <div class="title-desc">Sent over 300 emails</div>
+                            </div>
+                            <div class="title-item" data-title="Deal Closer">
+                                <div class="title-name">Deal Closer</div>
+                                <div class="title-desc">Closed 15+ deals</div>
+                            </div>
+                            <div class="title-item" data-title="Follow-up Master">
+                                <div class="title-name">Follow-up Master</div>
+                                <div class="title-desc">Never missed a follow-up</div>
+                            </div>
+                            <div class="title-item" data-title="Social Butterfly">
+                                <div class="title-name">Social Butterfly</div>
+                                <div class="title-desc">Connected with 50+ contacts</div>
+                            </div>
+                            <div class="title-item" data-title="Pet Whisperer">
+                                <div class="title-name">Pet Whisperer</div>
+                                <div class="title-desc">Maintain 90%+ happiness for all pets</div>
+                            </div>
+                            <div class="title-item locked" data-title="Meeting Maven">
+                                <div class="title-name">Meeting Maven</div>
+                                <div class="title-desc">Schedule 50 meetings (42/50)</div>
+                                <div class="title-lock"><i class="fas fa-lock"></i></div>
+                            </div>
+                            <div class="title-item locked" data-title="Cold Call King">
+                                <div class="title-name">Cold Call King</div>
+                                <div class="title-desc">Make 100 calls (89/100)</div>
+                                <div class="title-lock"><i class="fas fa-lock"></i></div>
+                            </div>
+                            <div class="title-item locked" data-title="Top Earner">
+                                <div class="title-name">Top Earner</div>
+                                <div class="title-desc">Close $500K in deals ($342K/$500K)</div>
+                                <div class="title-lock"><i class="fas fa-lock"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-tab-content" id="achievements-tab">
+                    <div class="achievements-container">
+                        <div class="level-progress">
+                            <div class="level-info">
+                                <div class="current-level">Level 12</div>
+                                <div class="next-level">Level 13</div>
+                            </div>
+                            <div class="xp-bar-container">
+                                <div class="xp-bar" style="width: 75%;"></div>
+                            </div>
+                            <div class="xp-info">3,750 / 5,000 XP</div>
+                        </div>
+                        
+                        <h3 class="section-title">Achievements</h3>
+                        <div class="achievements-list">
+                            <div class="achievement-row achieved">
+                                <div class="achievement-icon">🏆</div>
+                                <div class="achievement-details">
+                                    <div class="achievement-name">First Steps</div>
+                                    <div class="achievement-desc">Make your first contact</div>
+                                </div>
+                                <div class="achievement-reward">+100 XP</div>
+                            </div>
+                            <div class="achievement-row achieved">
+                                <div class="achievement-icon">📧</div>
+                                <div class="achievement-details">
+                                    <div class="achievement-name">Email Expert</div>
+                                    <div class="achievement-desc">Send 300 emails</div>
+                                </div>
+                                <div class="achievement-reward">+500 XP</div>
+                            </div>
+                            <div class="achievement-row achieved">
+                                <div class="achievement-icon">💰</div>
+                                <div class="achievement-details">
+                                    <div class="achievement-name">Deal Master</div>
+                                    <div class="achievement-desc">Close 15 deals</div>
+                                </div>
+                                <div class="achievement-reward">+750 XP</div>
+                            </div>
+                            <div class="achievement-row achieved">
+                                <div class="achievement-icon">🐶</div>
+                                <div class="achievement-details">
+                                    <div class="achievement-name">Pet Collector</div>
+                                    <div class="achievement-desc">Have 20 pet contacts</div>
+                                </div>
+                                <div class="achievement-reward">+300 XP</div>
+                            </div>
+                            <div class="achievement-row in-progress">
+                                <div class="achievement-icon">📱</div>
+                                <div class="achievement-details">
+                                    <div class="achievement-name">Call Champion</div>
+                                    <div class="achievement-desc">Make 100 calls</div>
+                                    <div class="achievement-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 89%;"></div>
+                                        </div>
+                                        <div class="progress-text">89/100</div>
+                                    </div>
+                                </div>
+                                <div class="achievement-reward">+600 XP</div>
+                            </div>
+                            <div class="achievement-row in-progress">
+                                <div class="achievement-icon">📅</div>
+                                <div class="achievement-details">
+                                    <div class="achievement-name">Meeting Mastermind</div>
+                                    <div class="achievement-desc">Schedule 50 meetings</div>
+                                    <div class="achievement-progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 84%;"></div>
+                                        </div>
+                                        <div class="progress-text">42/50</div>
+                                    </div>
+                                </div>
+                                <div class="achievement-reward">+400 XP</div>
+                            </div>
+                            <div class="achievement-row locked">
+                                <div class="achievement-icon">👑</div>
+                                <div class="achievement-details">
+                                    <div class="achievement-name">Sales Legend</div>
+                                    <div class="achievement-desc">Close $1M in deals</div>
+                                </div>
+                                <div class="achievement-reward">+2000 XP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-tab-content" id="stats-tab">
+                    <div class="stats-container">
+                        <div class="stats-summary">
+                            <div class="summary-stat-large">
+                                <div class="stat-value">324</div>
+                                <div class="stat-label">Emails Sent</div>
+                            </div>
+                            <div class="summary-stat-large">
+                                <div class="stat-value">89</div>
+                                <div class="stat-label">Calls Made</div>
+                            </div>
+                            <div class="summary-stat-large">
+                                <div class="stat-value">42</div>
+                                <div class="stat-label">Meetings Scheduled</div>
+                            </div>
+                            <div class="summary-stat-large">
+                                <div class="stat-value">17</div>
+                                <div class="stat-label">Deals Closed</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-details">
+                            <h3 class="section-title">Performance Stats</h3>
+                            <div class="stats-list">
+                                <div class="stat-item-row">
+                                    <div class="stat-label">Average Response Time</div>
+                                    <div class="stat-value">3.2 hours</div>
+                                </div>
+                                <div class="stat-item-row">
+                                    <div class="stat-label">Follow-up Rate</div>
+                                    <div class="stat-value">97%</div>
+                                </div>
+                                <div class="stat-item-row">
+                                    <div class="stat-label">Deal Conversion Rate</div>
+                                    <div class="stat-value">32%</div>
+                                </div>
+                                <div class="stat-item-row">
+                                    <div class="stat-label">Average Deal Size</div>
+                                    <div class="stat-value">$28,400</div>
+                                </div>
+                                <div class="stat-item-row">
+                                    <div class="stat-label">Total Revenue Generated</div>
+                                    <div class="stat-value">$482,800</div>
+                                </div>
+                                <div class="stat-item-row">
+                                    <div class="stat-label">Pet Happiness Average</div>
+                                    <div class="stat-value">82%</div>
+                                </div>
+                            </div>
+                            
+                            <h3 class="section-title">Activity Timeline</h3>
+                            <div class="activity-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-date">Today</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Sent 5 emails</div>
+                                        <div class="timeline-desc">+25 XP earned</div>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">Yesterday</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Closed deal with TechSolutions</div>
+                                        <div class="timeline-desc">+150 XP earned</div>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">3 days ago</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Reached Level 12</div>
+                                        <div class="timeline-desc">Unlocked title: Email Champion</div>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">Last week</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Added 3 new contacts</div>
+                                        <div class="timeline-desc">+45 XP earned</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pet Modal -->
         <div class="pet-modal" id="pet-modal">
             <div class="modal-close" id="modal-close"><i class="fas fa-times"></i></div>
             
@@ -2430,333 +1893,55 @@
                     <div class="pet-level">✨ Level 5 ✨</div>
                 </div>
                 
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-label">Happiness</div>
-                        <div class="stat-value">85%</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Engagement</div>
-                        <div class="stat-value">70%</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Deal Progress</div>
-                        <div class="stat-value">$28,000</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">House</div>
-                        <div class="stat-value">TechSolutions</div>
-                    </div>
-                </div>
-                
-                <h3 class="section-title">Recent Activity</h3>
-                <div class="activity-log">
-                    <div class="log-entry">
-                        Sent Email to Emily <span class="time-stamp">Today, 11:23 AM</span>
-                    </div>
-                    <div class="log-entry">
-                        Deal moved to Proposal stage <span class="time-stamp">Today, 10:15 AM</span>
-                    </div>
-                    <div class="log-entry">
-                        Scheduled Meeting <span class="time-stamp">Yesterday, 4:30 PM</span>
-                    </div>
-                    <div class="log-entry">
-                        Deal value increased by $3,000 <span class="time-stamp">3 days ago</span>
-                    </div>
-                    <div class="log-entry">
-                        Phone Call completed <span class="time-stamp">3 days ago</span>
-                    </div>
-                </div>
-                
-                <h3 class="section-title">Daily Tasks</h3>
-                <div class="task-list">
-                    <div class="task-item task-complete">
-                        <div class="task-checkbox">✓</div>
-                        <div class="task-text">Send 5 emails</div>
-                        <div class="task-reward">+10 XP</div>
-                    </div>
-                    <div class="task-item">
-                        <div class="task-checkbox"></div>
-                        <div class="task-text">Log 3 calls</div>
-                        <div class="task-reward">Pet Hat</div>
-                    </div>
-                    <div class="task-item">
-                        <div class="task-checkbox"></div>
-                        <div class="task-text">Move 1 deal to next stage</div>
-                        <div class="task-reward">+20 XP</div>
-                    </div>
-                    <div class="task-item">
-                        <div class="task-checkbox"></div>
-                        <div class="task-text">Schedule follow-up meeting</div>
-                        <div class="task-reward">+15 XP</div>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="action-btn"><i class="fas fa-utensils"></i> Feed Pet</button>
-                    <button class="action-btn"><i class="fas fa-calendar-alt"></i> Schedule Playdate</button>
-                    <button class="action-btn primary-btn"><i class="fas fa-tree"></i> Take to Park</button>
-                </div>
+                <!-- Pet details content -->
             </div>
             
             <div class="pet-visual">
                 <div class="pet-large">🐶</div>
-                
-                <div class="accessories-section">
-                    <h3 class="section-title">Accessories</h3>
-                    <div class="accessory-items">
-                        <div class="accessory active">🎩</div>
-                        <div class="accessory">🧣</div>
-                        <div class="accessory">👓</div>
-                        <div class="accessory">🎀</div>
-                        <div class="accessory">🦺</div>
-                        <div class="accessory">➕</div>
-                    </div>
-                </div>
-                
-                <div class="achievements-section">
-                    <h3 class="section-title">Achievements</h3>
-                    <div class="achievements-grid">
-                        <div class="achievement-badge" data-tooltip="Deal Closer">💰</div>
-                        <div class="achievement-badge" data-tooltip="Email Champion">✉️</div>
-                        <div class="achievement-badge" data-tooltip="Follow-up Master">🔄</div>
-                        <div class="achievement-badge locked" data-tooltip="Meeting Maven">📅</div>
-                        <div class="achievement-badge locked" data-tooltip="Top Earner">👑</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Company Modal -->
-        <div class="company-modal" id="company-modal">
-            <div class="modal-close" id="company-modal-close"><i class="fas fa-times"></i></div>
-            
-            <div class="company-details">
-                <div class="company-modal-header">
-                    <div class="company-modal-name" id="company-modal-name">TechSolutions LLC</div>
-                    <div class="company-modal-type">Enterprise Client</div>
-                </div>
-                
-                <div class="company-summary">
-                    <div class="summary-item">
-                        <div class="summary-icon"><i class="fas fa-users"></i></div>
-                        <div class="summary-value" id="company-contacts-count">2</div>
-                        <div class="summary-label">Contacts</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-icon"><i class="fas fa-money-bill-wave"></i></div>
-                        <div class="summary-value" id="company-deals-value">$35,500</div>
-                        <div class="summary-label">Total Deals</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-icon"><i class="fas fa-heart"></i></div>
-                        <div class="summary-value" id="company-health">88%</div>
-                        <div class="summary-label">Avg Health</div>
-                    </div>
-                </div>
-                
-                <div class="activity-tabs">
-                    <div class="activity-tab active" data-tab="activity">Activity</div>
-                    <div class="activity-tab" data-tab="notes">Notes</div>
-                    <div class="activity-tab" data-tab="emails">Emails</div>
-                    <div class="activity-tab" data-tab="calls">Calls</div>
-                    <div class="activity-tab" data-tab="tasks">Tasks</div>
-                    <div class="activity-tab" data-tab="meetings">Meetings</div>
-                </div>
-                
-                <div class="filter-row">
-                    <div class="filter-label">Filter by:</div>
-                    <div class="filter-dropdown">
-                        <span class="filter-text">Filter activity (14/25)</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="filter-dropdown">
-                        <span class="filter-text">All users</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="filter-dropdown">
-                        <span class="filter-text">All teams</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                </div>
-                
-                <div class="activity-content active" id="activity-content">
-                    <div class="activity-item">
-                        <div class="activity-icon email-icon"><i class="fas fa-envelope"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Email sent to Emily Johnson</div>
-                            <div class="activity-time">Today, 11:23 AM</div>
-                            <div class="activity-preview">Hi Emily, I wanted to follow up on our discussion about the new software package...</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon deal-icon"><i class="fas fa-handshake"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Deal moved to Proposal stage</div>
-                            <div class="activity-time">Today, 10:15 AM</div>
-                            <div class="activity-preview">Enterprise Software Package - $28,000</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon meeting-icon"><i class="fas fa-calendar-check"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Meeting scheduled with Alex Chen</div>
-                            <div class="activity-time">Yesterday, 4:30 PM</div>
-                            <div class="activity-preview">Product Demo - 3/25/2025 at 2:00 PM</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon call-icon"><i class="fas fa-phone-alt"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Call completed with Emily Johnson</div>
-                            <div class="activity-time">3 days ago</div>
-                            <div class="activity-preview">Discussed implementation timeline and additional requirements</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="activity-content" id="notes-content">
-                    <div class="activity-item">
-                        <div class="activity-icon note-icon"><i class="fas fa-sticky-note"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Meeting Notes: Initial Consultation</div>
-                            <div class="activity-time">Last week</div>
-                            <div class="activity-preview">Client expressed interest in our enterprise package. Key decision makers include Emily (CTO) and Alex (IT Director).</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon note-icon"><i class="fas fa-sticky-note"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Follow-up Strategy</div>
-                            <div class="activity-time">2 weeks ago</div>
-                            <div class="activity-preview">Plan to schedule demo next week. Focus on security features and API integration capabilities.</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="activity-content" id="emails-content">
-                    <div class="activity-item">
-                        <div class="activity-icon email-icon"><i class="fas fa-envelope"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Email sent to Emily Johnson</div>
-                            <div class="activity-time">Today, 11:23 AM</div>
-                            <div class="activity-preview">Hi Emily, I wanted to follow up on our discussion about the new software package...</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon email-icon"><i class="fas fa-envelope"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Email received from Alex Chen</div>
-                            <div class="activity-time">2 days ago</div>
-                            <div class="activity-preview">Thanks for your proposal. I've shared it with the team and we have a few questions...</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="activity-content" id="calls-content">
-                    <div class="activity-item">
-                        <div class="activity-icon call-icon"><i class="fas fa-phone-alt"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Call completed with Emily Johnson</div>
-                            <div class="activity-time">3 days ago</div>
-                            <div class="activity-preview">Duration: 24 minutes - Discussed implementation timeline and additional requirements</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon call-icon"><i class="fas fa-phone-alt"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Call scheduled with Alex Chen</div>
-                            <div class="activity-time">Tomorrow, 10:00 AM</div>
-                            <div class="activity-preview">Technical discussion about API requirements</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="activity-content" id="tasks-content">
-                    <div class="activity-item">
-                        <div class="activity-icon task-icon"><i class="fas fa-tasks"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Prepare technical specification document</div>
-                            <div class="activity-time">Due: Tomorrow</div>
-                            <div class="activity-preview">Create detailed overview of implementation requirements</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon task-icon"><i class="fas fa-tasks"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Schedule follow-up demo</div>
-                            <div class="activity-time">Due: Next week</div>
-                            <div class="activity-preview">Coordinate with product team for customized demonstration</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="activity-content" id="meetings-content">
-                    <div class="activity-item">
-                        <div class="activity-icon meeting-icon"><i class="fas fa-calendar-check"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Product Demo with TechSolutions Team</div>
-                            <div class="activity-time">03/25/2025, 2:00 PM</div>
-                            <div class="activity-preview">Attendees: Emily Johnson, Alex Chen, and 3 others</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon meeting-icon"><i class="fas fa-calendar-check"></i></div>
-                        <div class="activity-details">
-                            <div class="activity-title">Contract Review Meeting</div>
-                            <div class="activity-time">03/30/2025, 11:00 AM</div>
-                            <div class="activity-preview">Final review of contract terms before signing</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="company-contacts">
-                    <h3 class="section-title">Company Contacts</h3>
-                    <div class="contacts-list" id="company-contacts-list">
-                        <!-- Contact cards will be populated here by JavaScript -->
-                    </div>
-                </div>
+                <!-- Pet visual content -->
             </div>
         </div>
     </div>
     
     <script>
-                      // Replace your existing script with this optimized version
         document.addEventListener('DOMContentLoaded', function() {
-            // Cache DOM elements
-            const loadingScreen = document.getElementById('loading-screen');
-            const appContainer = document.querySelector('.app-container');
-            const profileModal = document.getElementById('profile-modal');
-            const profileButton = document.getElementById('profile-button');
-            const profileModalClose = document.getElementById('profile-modal-close');
-            const modal = document.getElementById('pet-modal');
-            const modalOverlay = document.getElementById('modal-overlay');
-            const closeBtn = document.getElementById('modal-close');
-            const companyModal = document.getElementById('company-modal');
-            const companyModalClose = document.getElementById('company-modal-close');
+            // Cache DOM elements for better performance
+            const elements = {
+                loadingScreen: document.getElementById('loading-screen'),
+                appContainer: document.querySelector('.app-container'),
+                contactView: document.getElementById('contact-view'),
+                companyView: document.getElementById('company-view'),
+                contactViewBtn: document.getElementById('contact-view-btn'),
+                companyViewBtn: document.getElementById('company-view-btn'),
+                contactNavTabs: document.getElementById('contact-nav-tabs'),
+                navTabs: document.querySelectorAll('.nav-tab'),
+                modalOverlay: document.getElementById('modal-overlay'),
+                petModal: document.getElementById('pet-modal'),
+                petModalClose: document.getElementById('modal-close'),
+                profileModal: document.getElementById('profile-modal'),
+                profileButton: document.getElementById('profile-button'),
+                profileModalClose: document.getElementById('profile-modal-close'),
+                getStartedBtn: document.getElementById('get-started-btn'),
+                introBanner: document.querySelector('.intro-banner')
+            };
             
             // Hide app content until loaded
-            if (appContainer) {
-                appContainer.style.visibility = 'hidden';
+            if (elements.appContainer) {
+                elements.appContainer.style.visibility = 'hidden';
             }
             
             // Function to hide loading screen
             function hideLoadingScreen() {
-                if (loadingScreen) {
-                    // Give a slight delay to ensure everything is initialized
+                if (elements.loadingScreen) {
                     setTimeout(() => {
-                        loadingScreen.style.opacity = '0';
-                        
-                        // Make app content visible
-                        if (appContainer) {
-                            appContainer.style.visibility = 'visible';
+                        elements.loadingScreen.style.opacity = '0';
+                        if (elements.appContainer) {
+                            elements.appContainer.style.visibility = 'visible';
                         }
-                        
-                        // Remove loading screen after transition
                         setTimeout(() => {
-                            loadingScreen.style.display = 'none';
+                            elements.loadingScreen.style.display = 'none';
                         }, 500);
-                    }, 1500); // Adjust timing as needed
+                    }, 1000);
                 }
             }
             
@@ -2764,101 +1949,168 @@
             window.addEventListener('load', hideLoadingScreen);
             
             // Fallback in case load event doesn't fire
-            setTimeout(hideLoadingScreen, 5000);
+            setTimeout(hideLoadingScreen, 3000);
             
-            // Make sure profile modal is hidden initially
-            if (profileModal) {
-                profileModal.style.display = 'none';
-                profileModal.style.opacity = '0';
+            // Modal functions
+            function openProfileModal() {
+                if (!elements.modalOverlay || !elements.profileModal) return;
+                
+                // Show overlay and modal
+                elements.modalOverlay.style.display = 'block';
+                elements.profileModal.style.display = 'block';
+                
+                // Force reflow before starting transition
+                void elements.profileModal.offsetWidth;
+                
+                // Start transition
+                elements.modalOverlay.style.opacity = '1';
+                elements.profileModal.style.opacity = '1';
             }
-        
-            // Initialize other UI elements
-            const getStartedBtn = document.getElementById('get-started-btn');
-            const introBanner = document.querySelector('.intro-banner');
-            const contactViewBtn = document.getElementById('contact-view-btn');
-            const companyViewBtn = document.getElementById('company-view-btn');
-            const contactView = document.getElementById('contact-view');
-            const companyView = document.getElementById('company-view');
-            const contactNavTabs = document.getElementById('contact-nav-tabs');
-            const navTabs = document.querySelectorAll('.nav-tab');
             
-            // Initialize the view on page load
-            updateViewMode();
+            function closeProfileModal() {
+                if (!elements.profileModal) return;
+                
+                elements.profileModal.style.opacity = '0';
+                if (elements.modalOverlay) elements.modalOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    elements.profileModal.style.display = 'none';
+                    updateOverlayVisibility();
+                }, 300);
+            }
             
-            // PERFORMANCE OPTIMIZATION: Use event delegation
-            // Event delegation for contact cards
+            function openPetModal(petIcon) {
+                if (!elements.petModal || !elements.modalOverlay) return;
+                
+                const petLarge = elements.petModal.querySelector('.pet-large');
+                if (petLarge) petLarge.textContent = petIcon;
+                
+                elements.petModal.style.display = 'flex';
+                elements.modalOverlay.style.display = 'block';
+                
+                // Force reflow
+                void elements.petModal.offsetWidth;
+                
+                elements.modalOverlay.style.opacity = '1';
+                elements.petModal.style.opacity = '1';
+            }
+            
+            function closePetModal() {
+                if (!elements.petModal) return;
+                
+                elements.petModal.style.opacity = '0';
+                if (elements.modalOverlay) elements.modalOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    elements.petModal.style.display = 'none';
+                    updateOverlayVisibility();
+                }, 300);
+            }
+            
+            // Only hide overlay if all modals are closed
+            function updateOverlayVisibility() {
+                if (!elements.modalOverlay) return;
+                
+                const petModalVisible = elements.petModal && 
+                    window.getComputedStyle(elements.petModal).display !== 'none';
+                const profileModalVisible = elements.profileModal && 
+                    window.getComputedStyle(elements.profileModal).display !== 'none';
+                
+                if (!petModalVisible && !profileModalVisible) {
+                    elements.modalOverlay.style.display = 'none';
+                }
+            }
+            
+            // View toggle functions
+            function updateViewMode() {
+                if (!elements.contactView || !elements.companyView || !elements.contactNavTabs) return;
+                
+                if (elements.contactViewBtn && elements.contactViewBtn.classList.contains('active')) {
+                    elements.contactView.style.display = 'grid';
+                    elements.companyView.style.display = 'none';
+                    elements.contactNavTabs.style.display = 'flex';
+                } else {
+                    elements.contactView.style.display = 'none';
+                    elements.companyView.style.display = 'block';
+                    elements.contactNavTabs.style.display = 'none';
+                }
+            }
+            
+            // Update profile mini avatar
+            function updateProfileMiniAvatar() {
+                const miniAvatar = document.querySelector('.profile-avatar-mini');
+                const avatarFigure = document.querySelector('.avatar-figure');
+                if (miniAvatar && avatarFigure) {
+                    miniAvatar.textContent = avatarFigure.textContent;
+                }
+            }
+            
+            // Event delegation for better performance
             document.body.addEventListener('click', function(e) {
-                // Handle contact card clicks
-                if (e.target.closest('.contact-card')) {
-                    const card = e.target.closest('.contact-card');
+                const target = e.target;
+                
+                // Profile button
+                if (target.closest('#profile-button')) {
+                    e.preventDefault();
+                    openProfileModal();
+                }
+                
+                // Profile modal close button
+                else if (target.closest('#profile-modal-close')) {
+                    closeProfileModal();
+                }
+                
+                // Pet modal close button
+                else if (target.closest('#modal-close')) {
+                    closePetModal();
+                }
+                
+                // Contact cards
+                else if (target.closest('.contact-card')) {
+                    const card = target.closest('.contact-card');
                     const petIcon = card.querySelector('.pet-icon');
                     if (petIcon) {
                         openPetModal(petIcon.textContent);
                     }
                 }
                 
-                // Handle pet mini clicks
-                else if (e.target.closest('.pet-mini')) {
-                    const petMini = e.target.closest('.pet-mini');
+                // Pet mini icons
+                else if (target.closest('.pet-mini')) {
+                    const petMini = target.closest('.pet-mini');
                     openPetModal(petMini.textContent);
                 }
                 
-                // Handle company card clicks
-                else if (e.target.closest('.company-card')) {
-                    const card = e.target.closest('.company-card');
-                    const companyName = card.querySelector('.company-name');
-                    if (companyName) {
-                        openCompanyModal(companyName.textContent);
-                    }
+                // View toggle buttons
+                else if (target.closest('#contact-view-btn')) {
+                    elements.contactViewBtn.classList.add('active');
+                    elements.companyViewBtn.classList.remove('active');
+                    updateViewMode();
+                }
+                else if (target.closest('#company-view-btn')) {
+                    elements.companyViewBtn.classList.add('active');
+                    elements.contactViewBtn.classList.remove('active');
+                    updateViewMode();
                 }
                 
-                // Handle profile button clicks - ensure this is captured regardless of browser
-                else if (e.target.closest('#profile-button')) {
-                    openProfileModal();
+                // Nav tabs
+                else if (target.closest('.nav-tab')) {
+                    const tab = target.closest('.nav-tab');
+                    elements.navTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
                 }
                 
-                // Handle accessory clicks
-                else if (e.target.closest('.accessory')) {
-                    const accessory = e.target.closest('.accessory');
-                    document.querySelectorAll('.accessory').forEach(i => i.classList.remove('active'));
-                    accessory.classList.add('active');
+                // Hide intro banner
+                else if (target.closest('#get-started-btn')) {
+                    elements.introBanner.style.display = 'none';
                 }
                 
-                // Handle task checkbox clicks
-                else if (e.target.closest('.task-checkbox')) {
-                    const checkbox = e.target.closest('.task-checkbox');
-                    const taskItem = checkbox.parentElement;
-                    taskItem.classList.toggle('task-complete');
-                    if (taskItem.classList.contains('task-complete')) {
-                        checkbox.innerHTML = '✓';
-                    } else {
-                        checkbox.innerHTML = '';
-                    }
-                }
-                
-                // Handle title items
-                else if (e.target.closest('.title-item:not(.locked)')) {
-                    const titleItem = e.target.closest('.title-item:not(.locked)');
-                    if (!titleItem.classList.contains('locked')) {
-                        document.querySelectorAll('.title-item').forEach(t => t.classList.remove('active'));
-                        titleItem.classList.add('active');
-                        
-                        // Update current title
-                        const titleText = titleItem.getAttribute('data-title');
-                        const currentTitle = document.querySelector('.current-title');
-                        const profileTitle = document.querySelector('.profile-title');
-                        if (currentTitle) currentTitle.textContent = titleText;
-                        if (profileTitle) profileTitle.textContent = titleText;
-                    }
-                }
-                
-                // Handle option items for avatar customization
-                else if (e.target.closest('.option-item')) {
-                    const option = e.target.closest('.option-item');
+                // Avatar customization options
+                else if (target.closest('.option-item')) {
+                    const option = target.closest('.option-item');
                     const type = option.getAttribute('data-type');
                     const value = option.getAttribute('data-value');
                     
-                    // Remove active class from all options of this type
+                    // Remove active class from similar items
                     document.querySelectorAll(`.option-item[data-type="${type}"]`).forEach(item => {
                         item.classList.remove('active');
                     });
@@ -2866,12 +2118,12 @@
                     // Add active class to clicked option
                     option.classList.add('active');
                     
+                    // Apply changes to avatar
                     const avatarFigure = document.querySelector('.avatar-figure');
                     const avatarBackground = document.querySelector('.avatar-background');
                     const avatarHat = document.querySelector('.avatar-accessory.hat');
                     const avatarGlasses = document.querySelector('.avatar-accessory.glasses');
                     
-                    // Apply the selected option
                     switch(type) {
                         case 'base':
                             if (avatarFigure) avatarFigure.textContent = value;
@@ -2901,383 +2153,54 @@
                             break;
                     }
                     
-                    // Update the mini avatar in the profile button
+                    // Update profile avatar
                     updateProfileMiniAvatar();
+                }
+                
+                // Title selection
+                else if (target.closest('.title-item:not(.locked)')) {
+                    const titleItem = target.closest('.title-item:not(.locked)');
+                    document.querySelectorAll('.title-item').forEach(t => t.classList.remove('active'));
+                    titleItem.classList.add('active');
+                    
+                    const titleText = titleItem.getAttribute('data-title');
+                    const currentTitle = document.querySelector('.current-title');
+                    const profileTitle = document.querySelector('.profile-title');
+                    if (currentTitle) currentTitle.textContent = titleText;
+                    if (profileTitle) profileTitle.textContent = titleText;
                 }
             });
             
-            // Open profile modal
-            function openProfileModal() {
-                if (!modalOverlay || !profileModal) return;
-                
-                console.log("Opening profile modal"); // Debug
-                
-                // Ensure modal is in the right state before showing
-                profileModal.style.display = 'block';
-                modalOverlay.style.display = 'block';
-                
-                // Add a slight delay for the fade-in animation
-                setTimeout(() => {
-                    profileModal.style.opacity = '1';
-                    modalOverlay.style.opacity = '1';
-                }, 10);
-            }
-            
-            // Add explicit click handler for profile button as a backup
-            if (profileButton) {
-                profileButton.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    openProfileModal();
-                    return false;
-                };
-            }
-            
-            function openPetModal(petIcon) {
-                if (!modal || !modalOverlay) return;
-                
-                const petLarge = document.querySelector('.pet-modal .pet-large');
-                if (petLarge) petLarge.textContent = petIcon;
-                
-                modal.style.display = 'flex';
-                modalOverlay.style.display = 'block';
-                
-                // Add a slight delay for the fade-in animation
-                setTimeout(() => {
-                    modal.style.opacity = '1';
-                    modalOverlay.style.opacity = '1';
-                }, 10);
-            }
-            
-            // Close handlers for modals
-            if (closeBtn) {
-                closeBtn.addEventListener('click', closeModal);
-            }
-            
-            if (modalOverlay) {
-                modalOverlay.addEventListener('click', function(e) {
-                    // Only close if clicking directly on the overlay (not on modal content)
-                    if (e.target === modalOverlay) {
-                        closeAllModals();
+            // Modal overlay click to close
+            if (elements.modalOverlay) {
+                elements.modalOverlay.addEventListener('click', function(e) {
+                    if (e.target === elements.modalOverlay) {
+                        closePetModal();
+                        closeProfileModal();
                     }
                 });
             }
             
-            if (profileModalClose) {
-                profileModalClose.addEventListener('click', function() {
-                    closeProfileModal();
-                });
-            }
-            
-            if (companyModalClose) {
-                companyModalClose.addEventListener('click', function() {
-                    closeCompanyModal();
-                });
-            }
-            
-            function closeAllModals() {
-                closeModal();
-                closeProfileModal();
-                closeCompanyModal();
-            }
-            
-            function closeModal() {
-                if (!modal) return;
-                
-                modal.style.opacity = '0';
-                if (modalOverlay) modalOverlay.style.opacity = '0';
-                
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    updateOverlayVisibility();
-                }, 300);
-            }
-            
-            function closeProfileModal() {
-                if (!profileModal) return;
-                
-                profileModal.style.opacity = '0';
-                if (modalOverlay) modalOverlay.style.opacity = '0';
-                
-                setTimeout(() => {
-                    profileModal.style.display = 'none';
-                    updateOverlayVisibility();
-                }, 300);
-            }
-            
-            function closeCompanyModal() {
-                if (!companyModal) return;
-                
-                companyModal.style.opacity = '0';
-                if (modalOverlay) modalOverlay.style.opacity = '0';
-                
-                setTimeout(() => {
-                    companyModal.style.display = 'none';
-                    updateOverlayVisibility();
-                }, 300);
-            }
-            
-            // Only hide overlay if all modals are closed
-            function updateOverlayVisibility() {
-                if (!modalOverlay) return;
-                
-                const modalVisible = modal && window.getComputedStyle(modal).display !== 'none';
-                const profileModalVisible = profileModal && window.getComputedStyle(profileModal).display !== 'none';
-                const companyModalVisible = companyModal && window.getComputedStyle(companyModal).display !== 'none';
-                
-                if (!modalVisible && !profileModalVisible && !companyModalVisible) {
-                    modalOverlay.style.display = 'none';
-                }
-            }
-            
-            // Toggle between contact and company views
-            function updateViewMode() {
-                if (!contactView || !companyView || !contactNavTabs) return;
-                
-                if (contactViewBtn && contactViewBtn.classList.contains('active')) {
-                    contactView.style.display = 'grid';
-                    companyView.style.display = 'none';
-                    contactNavTabs.style.display = 'flex';
-                } else {
-                    companyView.style.display = 'block';
-                    contactView.style.display = 'none';
-                    contactNavTabs.style.display = 'none';
-                }
-            }
-            
-            if (contactViewBtn) {
-                contactViewBtn.addEventListener('click', function() {
-                    contactViewBtn.classList.add('active');
-                    if (companyViewBtn) companyViewBtn.classList.remove('active');
-                    updateViewMode();
-                });
-            }
-            
-            if (companyViewBtn) {
-                companyViewBtn.addEventListener('click', function() {
-                    companyViewBtn.classList.add('active');
-                    if (contactViewBtn) contactViewBtn.classList.remove('active');
-                    updateViewMode();
-                });
-            }
-            
-            // Toggle nav tabs
-            if (navTabs) {
-                navTabs.forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        navTabs.forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
-                    });
-                });
-            }
-            
-            // Hide intro banner on get started
-            if (getStartedBtn && introBanner) {
-                getStartedBtn.addEventListener('click', function() {
-                    introBanner.style.display = 'none';
-                });
-            }
-            
-            // Company data (sample data that would eventually come from HubSpot)
-            const companyData = {
-                "TechSolutions LLC": {
-                    type: "Enterprise Client",
-                    contacts: 2,
-                    totalDeals: "$35,500",
-                    health: "88%",
-                    contactsList: [
-                        { name: "Emily Johnson", icon: "🐶", id: "1" },
-                        { name: "Alex Chen", icon: "🐸", id: "7" }
-                    ]
-                },
-                "Acme Inc.": {
-                    type: "Mid-Market Client",
-                    contacts: 1,
-                    totalDeals: "$12,500",
-                    health: "78%",
-                    contactsList: [
-                        { name: "John Smith", icon: "🐱", id: "2" }
-                    ]
-                },
-                "Global Industries": {
-                    type: "Enterprise Prospect",
-                    contacts: 2,
-                    totalDeals: "$0",
-                    health: "32%",
-                    contactsList: [
-                        { name: "Robert Brown", icon: "🐰", id: "3" },
-                        { name: "Lisa Wong", icon: "🦁", id: "8" }
-                    ]
-                },
-                "Creative Studios": {
-                    type: "Small Business",
-                    contacts: 1,
-                    totalDeals: "$6,500",
-                    health: "53%",
-                    contactsList: [
-                        { name: "Sarah Wilson", icon: "🦊", id: "4" }
-                    ]
-                }
-            };
-            
-            function openCompanyModal(companyName) {
-                if (!companyModal || !modalOverlay) return;
-                
-                // Set company data in modal
-                const company = companyData[companyName] || {
-                    type: "Unknown",
-                    contacts: 0,
-                    totalDeals: "$0",
-                    health: "0%",
-                    contactsList: []
-                };
-                
-                const nameElement = document.getElementById('company-modal-name');
-                const typeElement = document.querySelector('.company-modal-type');
-                const contactsCountElement = document.getElementById('company-contacts-count');
-                const dealsValueElement = document.getElementById('company-deals-value');
-                const healthElement = document.getElementById('company-health');
-                
-                if (nameElement) nameElement.textContent = companyName;
-                if (typeElement) typeElement.textContent = company.type;
-                if (contactsCountElement) contactsCountElement.textContent = company.contacts;
-                if (dealsValueElement) dealsValueElement.textContent = company.totalDeals;
-                if (healthElement) healthElement.textContent = company.health;
-                
-                // Populate contacts list
-                const contactsList = document.getElementById('company-contacts-list');
-                if (contactsList) {
-                    contactsList.innerHTML = '';
-                    
-                    company.contactsList.forEach(contact => {
-                        const contactElement = document.createElement('div');
-                        contactElement.className = 'contact-mini';
-                        contactElement.innerHTML = `
-                            <div class="contact-mini-icon">${contact.icon}</div>
-                            <div class="contact-mini-name">${contact.name}</div>
-                        `;
-                        contactElement.addEventListener('click', function() {
-                            // Close company modal
-                            closeCompanyModal();
-                            // Open pet modal for this contact
-                            openPetModal(contact.icon);
-                        });
-                        contactsList.appendChild(contactElement);
-                    });
-                }
-                
-                // Show the modal and overlay
-                modalOverlay.style.display = 'block';
-                companyModal.style.display = 'flex';
-                
-                // Add a slight delay for the fade-in animation
-                setTimeout(() => {
-                    companyModal.style.opacity = '1';
-                    modalOverlay.style.opacity = '1';
-                }, 10);
-            }
-            
-            // Activity tab functionality
-            const activityTabs = document.querySelectorAll('.activity-tab');
-            const activityContents = document.querySelectorAll('.activity-content');
-            
-            if (activityTabs && activityContents) {
-                activityTabs.forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        // Remove active class from all tabs and content
-                        activityTabs.forEach(t => t.classList.remove('active'));
-                        activityContents.forEach(c => c.classList.remove('active'));
-                        
-                        // Add active class to clicked tab
-                        this.classList.add('active');
-                        
-                        // Show corresponding content
-                        const tabName = this.getAttribute('data-tab');
-                        const content = document.getElementById(`${tabName}-content`);
-                        if (content) content.classList.add('active');
-                    });
-                });
-            }
-            
-            // Profile tab switching
+            // Profile tab functionality
             const profileTabs = document.querySelectorAll('.profile-tab');
             const profileTabContents = document.querySelectorAll('.profile-tab-content');
             
-            if (profileTabs && profileTabContents) {
-                profileTabs.forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        // Remove active class from all tabs and content
-                        profileTabs.forEach(t => t.classList.remove('active'));
-                        profileTabContents.forEach(c => c.classList.remove('active'));
-                        
-                        // Add active class to clicked tab
-                        this.classList.add('active');
-                        
-                        // Show corresponding content
-                        const tabName = this.getAttribute('data-tab');
-                        const content = document.getElementById(`${tabName}-tab`);
-                        if (content) content.classList.add('active');
-                    });
+            profileTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Update tabs
+                    profileTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update content
+                    profileTabContents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
                 });
-            }
+            });
             
-            // Function to update the mini avatar in the profile button
-            function updateProfileMiniAvatar() {
-                const miniAvatar = document.querySelector('.profile-avatar-mini');
-                const avatarFigure = document.querySelector('.avatar-figure');
-                if (miniAvatar && avatarFigure) {
-                    miniAvatar.textContent = avatarFigure.textContent;
-                }
-            }
-            
-            // Level up animation (for demonstration)
-            function levelUp() {
-                const levelIndicator = document.querySelector('.profile-level-indicator');
-                const currentLevel = document.querySelector('.current-level');
-                const nextLevel = document.querySelector('.next-level');
-                
-                if (!levelIndicator || !currentLevel || !nextLevel) return;
-                
-                // Create and append level up animation elements
-                const levelUpAnim = document.createElement('div');
-                levelUpAnim.className = 'level-up-animation';
-                levelUpAnim.textContent = 'LEVEL UP!';
-                document.body.appendChild(levelUpAnim);
-                
-                // Show animation
-                setTimeout(() => {
-                    levelUpAnim.style.opacity = '1';
-                    levelUpAnim.style.transform = 'translate(-50%, -50%) scale(1)';
-                }, 100);
-                
-                // Update level numbers
-                const oldLevel = parseInt(levelIndicator.textContent);
-                const newLevel = oldLevel + 1;
-                
-                setTimeout(() => {
-                    levelIndicator.textContent = newLevel;
-                    currentLevel.textContent = `Level ${newLevel}`;
-                    nextLevel.textContent = `Level ${newLevel + 1}`;
-                    
-                    // Reset XP bar
-                    const xpBar = document.querySelector('.xp-bar');
-                    const xpInfo = document.querySelector('.xp-info');
-                    
-                    if (xpBar) xpBar.style.width = '10%';
-                    if (xpInfo) xpInfo.textContent = '500 / 5,000 XP';
-                }, 1500);
-                
-                // Remove animation
-                setTimeout(() => {
-                    levelUpAnim.style.opacity = '0';
-                    setTimeout(() => {
-                        levelUpAnim.remove();
-                    }, 300);
-                }, 3000);
-            }
-            
-            // Optional: Uncomment to see level up animation on page load
-            // setTimeout(levelUp, 3000);
+            // Initialize view
+            updateViewMode();
         });
     </script>
 </body>
