@@ -7,6 +7,62 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+                    /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--pastel-yellow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        
+        .loading-content {
+            text-align: center;
+            max-width: 80%;
+        }
+        
+        .loading-pet {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        
+        .loading-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--pastel-purple);
+            margin-bottom: 20px;
+        }
+        
+        .loading-bar-container {
+            width: 300px;
+            height: 15px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+            border: 2px solid var(--pastel-blue);
+        }
+        
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--pastel-blue), var(--pastel-purple));
+            border-radius: 8px;
+            animation: loading 3s ease-in-out;
+            animation-fill-mode: forwards;
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
         /* Base Styles */
         :root {
             --pastel-yellow: #FFF8E1;
@@ -1776,6 +1832,15 @@
     </style>
 </head>
 <body>
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-pet">🐶</div>
+            <div class="loading-text">Loading PetSpot Companion...</div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
     <!-- GitHub Corner -->
     <a href="https://avelydamcghee.github.io/hubspot-pet-companion-demo/" class="github-corner" aria-label="View source on GitHub" target="_blank">
         <svg width="80" height="80" viewBox="0 0 250 250" style="position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
@@ -2656,19 +2721,58 @@
     </div>
     
     <script>
-               // Simple demo interaction
+                      // Replace your existing script with this optimized version
         document.addEventListener('DOMContentLoaded', function() {
-            // Make sure profile modal is hidden initially
+            // Cache DOM elements
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.querySelector('.app-container');
             const profileModal = document.getElementById('profile-modal');
+            const profileButton = document.getElementById('profile-button');
+            const profileModalClose = document.getElementById('profile-modal-close');
+            const modal = document.getElementById('pet-modal');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const closeBtn = document.getElementById('modal-close');
+            const companyModal = document.getElementById('company-modal');
+            const companyModalClose = document.getElementById('company-modal-close');
+            
+            // Hide app content until loaded
+            if (appContainer) {
+                appContainer.style.visibility = 'hidden';
+            }
+            
+            // Function to hide loading screen
+            function hideLoadingScreen() {
+                if (loadingScreen) {
+                    // Give a slight delay to ensure everything is initialized
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = '0';
+                        
+                        // Make app content visible
+                        if (appContainer) {
+                            appContainer.style.visibility = 'visible';
+                        }
+                        
+                        // Remove loading screen after transition
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                        }, 500);
+                    }, 1500); // Adjust timing as needed
+                }
+            }
+            
+            // Show loading screen for minimum time
+            window.addEventListener('load', hideLoadingScreen);
+            
+            // Fallback in case load event doesn't fire
+            setTimeout(hideLoadingScreen, 5000);
+            
+            // Make sure profile modal is hidden initially
             if (profileModal) {
                 profileModal.style.display = 'none';
                 profileModal.style.opacity = '0';
             }
-            
-            const contactCards = document.querySelectorAll('.contact-card');
-            const modal = document.getElementById('pet-modal');
-            const modalOverlay = document.getElementById('modal-overlay');
-            const closeBtn = document.getElementById('modal-close');
+        
+            // Initialize other UI elements
             const getStartedBtn = document.getElementById('get-started-btn');
             const introBanner = document.querySelector('.intro-banner');
             const contactViewBtn = document.getElementById('contact-view-btn');
@@ -2681,53 +2785,256 @@
             // Initialize the view on page load
             updateViewMode();
             
-            // Open modal when clicking on a contact card
-            contactCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    openPetModal(this.querySelector('.pet-icon').textContent);
-                });
+            // PERFORMANCE OPTIMIZATION: Use event delegation
+            // Event delegation for contact cards
+            document.body.addEventListener('click', function(e) {
+                // Handle contact card clicks
+                if (e.target.closest('.contact-card')) {
+                    const card = e.target.closest('.contact-card');
+                    const petIcon = card.querySelector('.pet-icon');
+                    if (petIcon) {
+                        openPetModal(petIcon.textContent);
+                    }
+                }
+                
+                // Handle pet mini clicks
+                else if (e.target.closest('.pet-mini')) {
+                    const petMini = e.target.closest('.pet-mini');
+                    openPetModal(petMini.textContent);
+                }
+                
+                // Handle company card clicks
+                else if (e.target.closest('.company-card')) {
+                    const card = e.target.closest('.company-card');
+                    const companyName = card.querySelector('.company-name');
+                    if (companyName) {
+                        openCompanyModal(companyName.textContent);
+                    }
+                }
+                
+                // Handle profile button clicks - ensure this is captured regardless of browser
+                else if (e.target.closest('#profile-button')) {
+                    openProfileModal();
+                }
+                
+                // Handle accessory clicks
+                else if (e.target.closest('.accessory')) {
+                    const accessory = e.target.closest('.accessory');
+                    document.querySelectorAll('.accessory').forEach(i => i.classList.remove('active'));
+                    accessory.classList.add('active');
+                }
+                
+                // Handle task checkbox clicks
+                else if (e.target.closest('.task-checkbox')) {
+                    const checkbox = e.target.closest('.task-checkbox');
+                    const taskItem = checkbox.parentElement;
+                    taskItem.classList.toggle('task-complete');
+                    if (taskItem.classList.contains('task-complete')) {
+                        checkbox.innerHTML = '✓';
+                    } else {
+                        checkbox.innerHTML = '';
+                    }
+                }
+                
+                // Handle title items
+                else if (e.target.closest('.title-item:not(.locked)')) {
+                    const titleItem = e.target.closest('.title-item:not(.locked)');
+                    if (!titleItem.classList.contains('locked')) {
+                        document.querySelectorAll('.title-item').forEach(t => t.classList.remove('active'));
+                        titleItem.classList.add('active');
+                        
+                        // Update current title
+                        const titleText = titleItem.getAttribute('data-title');
+                        const currentTitle = document.querySelector('.current-title');
+                        const profileTitle = document.querySelector('.profile-title');
+                        if (currentTitle) currentTitle.textContent = titleText;
+                        if (profileTitle) profileTitle.textContent = titleText;
+                    }
+                }
+                
+                // Handle option items for avatar customization
+                else if (e.target.closest('.option-item')) {
+                    const option = e.target.closest('.option-item');
+                    const type = option.getAttribute('data-type');
+                    const value = option.getAttribute('data-value');
+                    
+                    // Remove active class from all options of this type
+                    document.querySelectorAll(`.option-item[data-type="${type}"]`).forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked option
+                    option.classList.add('active');
+                    
+                    const avatarFigure = document.querySelector('.avatar-figure');
+                    const avatarBackground = document.querySelector('.avatar-background');
+                    const avatarHat = document.querySelector('.avatar-accessory.hat');
+                    const avatarGlasses = document.querySelector('.avatar-accessory.glasses');
+                    
+                    // Apply the selected option
+                    switch(type) {
+                        case 'base':
+                            if (avatarFigure) avatarFigure.textContent = value;
+                            break;
+                        case 'hat':
+                            if (avatarHat) {
+                                if (value === 'none') {
+                                    avatarHat.style.display = 'none';
+                                } else {
+                                    avatarHat.style.display = 'block';
+                                    avatarHat.textContent = value;
+                                }
+                            }
+                            break;
+                        case 'glasses':
+                            if (avatarGlasses) {
+                                if (value === 'none') {
+                                    avatarGlasses.style.display = 'none';
+                                } else {
+                                    avatarGlasses.style.display = 'block';
+                                    avatarGlasses.textContent = value;
+                                }
+                            }
+                            break;
+                        case 'background':
+                            if (avatarBackground) avatarBackground.style.backgroundColor = value;
+                            break;
+                    }
+                    
+                    // Update the mini avatar in the profile button
+                    updateProfileMiniAvatar();
+                }
             });
             
-            // Open modal when clicking on pet mini icons
-            document.querySelectorAll('.pet-mini').forEach(pet => {
-                pet.addEventListener('click', function() {
-                    openPetModal(this.textContent);
-                });
-            });
+            // Open profile modal
+            function openProfileModal() {
+                if (!modalOverlay || !profileModal) return;
+                
+                console.log("Opening profile modal"); // Debug
+                
+                // Ensure modal is in the right state before showing
+                profileModal.style.display = 'block';
+                modalOverlay.style.display = 'block';
+                
+                // Add a slight delay for the fade-in animation
+                setTimeout(() => {
+                    profileModal.style.opacity = '1';
+                    modalOverlay.style.opacity = '1';
+                }, 10);
+            }
+            
+            // Add explicit click handler for profile button as a backup
+            if (profileButton) {
+                profileButton.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openProfileModal();
+                    return false;
+                };
+            }
             
             function openPetModal(petIcon) {
-                document.querySelector('.pet-modal .pet-large').textContent = petIcon;
+                if (!modal || !modalOverlay) return;
+                
+                const petLarge = document.querySelector('.pet-modal .pet-large');
+                if (petLarge) petLarge.textContent = petIcon;
+                
                 modal.style.display = 'flex';
                 modalOverlay.style.display = 'block';
                 
                 // Add a slight delay for the fade-in animation
                 setTimeout(() => {
-                    modal.style.opacity = 1;
-                    modalOverlay.style.opacity = 1;
+                    modal.style.opacity = '1';
+                    modalOverlay.style.opacity = '1';
                 }, 10);
             }
             
-            // Close modal
-            closeBtn.addEventListener('click', closeModal);
-            modalOverlay.addEventListener('click', closeModal);
+            // Close handlers for modals
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+            
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', function(e) {
+                    // Only close if clicking directly on the overlay (not on modal content)
+                    if (e.target === modalOverlay) {
+                        closeAllModals();
+                    }
+                });
+            }
+            
+            if (profileModalClose) {
+                profileModalClose.addEventListener('click', function() {
+                    closeProfileModal();
+                });
+            }
+            
+            if (companyModalClose) {
+                companyModalClose.addEventListener('click', function() {
+                    closeCompanyModal();
+                });
+            }
+            
+            function closeAllModals() {
+                closeModal();
+                closeProfileModal();
+                closeCompanyModal();
+            }
             
             function closeModal() {
-                modal.style.opacity = 0;
-                modalOverlay.style.opacity = 0;
+                if (!modal) return;
+                
+                modal.style.opacity = '0';
+                if (modalOverlay) modalOverlay.style.opacity = '0';
                 
                 setTimeout(() => {
                     modal.style.display = 'none';
-                    // Only hide overlay if no other modals are open
-                    if ((!profileModal || profileModal.style.display === 'none') && 
-                        (!companyModal || companyModal.style.display === 'none')) {
-                        modalOverlay.style.display = 'none';
-                    }
+                    updateOverlayVisibility();
                 }, 300);
+            }
+            
+            function closeProfileModal() {
+                if (!profileModal) return;
+                
+                profileModal.style.opacity = '0';
+                if (modalOverlay) modalOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    profileModal.style.display = 'none';
+                    updateOverlayVisibility();
+                }, 300);
+            }
+            
+            function closeCompanyModal() {
+                if (!companyModal) return;
+                
+                companyModal.style.opacity = '0';
+                if (modalOverlay) modalOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    companyModal.style.display = 'none';
+                    updateOverlayVisibility();
+                }, 300);
+            }
+            
+            // Only hide overlay if all modals are closed
+            function updateOverlayVisibility() {
+                if (!modalOverlay) return;
+                
+                const modalVisible = modal && window.getComputedStyle(modal).display !== 'none';
+                const profileModalVisible = profileModal && window.getComputedStyle(profileModal).display !== 'none';
+                const companyModalVisible = companyModal && window.getComputedStyle(companyModal).display !== 'none';
+                
+                if (!modalVisible && !profileModalVisible && !companyModalVisible) {
+                    modalOverlay.style.display = 'none';
+                }
             }
             
             // Toggle between contact and company views
             function updateViewMode() {
-                if (contactViewBtn.classList.contains('active')) {
+                if (!contactView || !companyView || !contactNavTabs) return;
+                
+                if (contactViewBtn && contactViewBtn.classList.contains('active')) {
                     contactView.style.display = 'grid';
                     companyView.style.display = 'none';
                     contactNavTabs.style.display = 'flex';
@@ -2738,58 +3045,38 @@
                 }
             }
             
-            contactViewBtn.addEventListener('click', function() {
-                contactViewBtn.classList.add('active');
-                companyViewBtn.classList.remove('active');
-                updateViewMode();
-            });
+            if (contactViewBtn) {
+                contactViewBtn.addEventListener('click', function() {
+                    contactViewBtn.classList.add('active');
+                    if (companyViewBtn) companyViewBtn.classList.remove('active');
+                    updateViewMode();
+                });
+            }
             
-            companyViewBtn.addEventListener('click', function() {
-                companyViewBtn.classList.add('active');
-                contactViewBtn.classList.remove('active');
-                updateViewMode();
-            });
+            if (companyViewBtn) {
+                companyViewBtn.addEventListener('click', function() {
+                    companyViewBtn.classList.add('active');
+                    if (contactViewBtn) contactViewBtn.classList.remove('active');
+                    updateViewMode();
+                });
+            }
             
             // Toggle nav tabs
-            navTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    navTabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
+            if (navTabs) {
+                navTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        navTabs.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                    });
                 });
-            });
+            }
             
             // Hide intro banner on get started
-            if (getStartedBtn) {
+            if (getStartedBtn && introBanner) {
                 getStartedBtn.addEventListener('click', function() {
                     introBanner.style.display = 'none';
                 });
             }
-            
-            // Toggle task completion
-            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('click', function() {
-                    const taskItem = this.parentElement;
-                    taskItem.classList.toggle('task-complete');
-                    if (taskItem.classList.contains('task-complete')) {
-                        this.innerHTML = '✓';
-                    } else {
-                        this.innerHTML = '';
-                    }
-                });
-            });
-            
-            // Toggle accessory selection
-            document.querySelectorAll('.accessory').forEach(item => {
-                item.addEventListener('click', function() {
-                    document.querySelectorAll('.accessory').forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-            
-            // Company card click handlers
-            const companyCards = document.querySelectorAll('.company-card');
-            const companyModal = document.getElementById('company-modal');
-            const companyModalClose = document.getElementById('company-modal-close');
             
             // Company data (sample data that would eventually come from HubSpot)
             const companyData = {
@@ -2833,16 +3120,9 @@
                 }
             };
             
-            // Open company modal when clicking on a company card
-            companyCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    // Get company name from card
-                    const companyName = this.querySelector('.company-name').textContent;
-                    openCompanyModal(companyName);
-                });
-            });
-            
             function openCompanyModal(companyName) {
+                if (!companyModal || !modalOverlay) return;
+                
                 // Set company data in modal
                 const company = companyData[companyName] || {
                     type: "Unknown",
@@ -2852,31 +3132,39 @@
                     contactsList: []
                 };
                 
-                document.getElementById('company-modal-name').textContent = companyName;
-                document.querySelector('.company-modal-type').textContent = company.type;
-                document.getElementById('company-contacts-count').textContent = company.contacts;
-                document.getElementById('company-deals-value').textContent = company.totalDeals;
-                document.getElementById('company-health').textContent = company.health;
+                const nameElement = document.getElementById('company-modal-name');
+                const typeElement = document.querySelector('.company-modal-type');
+                const contactsCountElement = document.getElementById('company-contacts-count');
+                const dealsValueElement = document.getElementById('company-deals-value');
+                const healthElement = document.getElementById('company-health');
+                
+                if (nameElement) nameElement.textContent = companyName;
+                if (typeElement) typeElement.textContent = company.type;
+                if (contactsCountElement) contactsCountElement.textContent = company.contacts;
+                if (dealsValueElement) dealsValueElement.textContent = company.totalDeals;
+                if (healthElement) healthElement.textContent = company.health;
                 
                 // Populate contacts list
                 const contactsList = document.getElementById('company-contacts-list');
-                contactsList.innerHTML = '';
-                
-                company.contactsList.forEach(contact => {
-                    const contactElement = document.createElement('div');
-                    contactElement.className = 'contact-mini';
-                    contactElement.innerHTML = `
-                        <div class="contact-mini-icon">${contact.icon}</div>
-                        <div class="contact-mini-name">${contact.name}</div>
-                    `;
-                    contactElement.addEventListener('click', function() {
-                        // Close company modal
-                        closeCompanyModal();
-                        // Open pet modal for this contact
-                        openPetModal(contact.icon);
+                if (contactsList) {
+                    contactsList.innerHTML = '';
+                    
+                    company.contactsList.forEach(contact => {
+                        const contactElement = document.createElement('div');
+                        contactElement.className = 'contact-mini';
+                        contactElement.innerHTML = `
+                            <div class="contact-mini-icon">${contact.icon}</div>
+                            <div class="contact-mini-name">${contact.name}</div>
+                        `;
+                        contactElement.addEventListener('click', function() {
+                            // Close company modal
+                            closeCompanyModal();
+                            // Open pet modal for this contact
+                            openPetModal(contact.icon);
+                        });
+                        contactsList.appendChild(contactElement);
                     });
-                    contactsList.appendChild(contactElement);
-                });
+                }
                 
                 // Show the modal and overlay
                 modalOverlay.style.display = 'block';
@@ -2884,189 +3172,71 @@
                 
                 // Add a slight delay for the fade-in animation
                 setTimeout(() => {
-                    companyModal.style.opacity = 1;
-                    modalOverlay.style.opacity = 1;
+                    companyModal.style.opacity = '1';
+                    modalOverlay.style.opacity = '1';
                 }, 10);
-            }
-            
-            // Close company modal
-            companyModalClose.addEventListener('click', closeCompanyModal);
-            
-            function closeCompanyModal() {
-                companyModal.style.opacity = 0;
-                modalOverlay.style.opacity = 0;
-                
-                setTimeout(() => {
-                    companyModal.style.display = 'none';
-                    // Only hide overlay if no other modals are open
-                    if ((!modal || modal.style.display === 'none') && 
-                        (!profileModal || profileModal.style.display === 'none')) {
-                        modalOverlay.style.display = 'none';
-                    }
-                }, 300);
             }
             
             // Activity tab functionality
             const activityTabs = document.querySelectorAll('.activity-tab');
             const activityContents = document.querySelectorAll('.activity-content');
             
-            activityTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs and content
-                    activityTabs.forEach(t => t.classList.remove('active'));
-                    activityContents.forEach(c => c.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                    
-                    // Show corresponding content
-                    const tabName = this.getAttribute('data-tab');
-                    document.getElementById(`${tabName}-content`).classList.add('active');
+            if (activityTabs && activityContents) {
+                activityTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Remove active class from all tabs and content
+                        activityTabs.forEach(t => t.classList.remove('active'));
+                        activityContents.forEach(c => c.classList.remove('active'));
+                        
+                        // Add active class to clicked tab
+                        this.classList.add('active');
+                        
+                        // Show corresponding content
+                        const tabName = this.getAttribute('data-tab');
+                        const content = document.getElementById(`${tabName}-content`);
+                        if (content) content.classList.add('active');
+                    });
                 });
-            });
-            
-            // Profile functionality
-            const profileButton = document.getElementById('profile-button');
-            const profileModalClose = document.getElementById('profile-modal-close');
-            const profileTabs = document.querySelectorAll('.profile-tab');
-            const profileTabContents = document.querySelectorAll('.profile-tab-content');
-            
-            // Open profile modal when clicking profile button
-            profileButton.addEventListener('click', function() {
-                modalOverlay.style.display = 'block';
-                profileModal.style.display = 'block';
-                
-                // Add a slight delay for the fade-in animation
-                setTimeout(() => {
-                    profileModal.style.opacity = 1;
-                    modalOverlay.style.opacity = 1;
-                }, 10);
-            });
-            
-            // Close profile modal
-            if (profileModalClose) {
-                profileModalClose.addEventListener('click', closeProfileModal);
-            }
-            
-            function closeProfileModal() {
-                profileModal.style.opacity = 0;
-                modalOverlay.style.opacity = 0;
-                
-                setTimeout(() => {
-                    profileModal.style.display = 'none';
-                    // Only hide overlay if no other modals are open
-                    if ((!modal || modal.style.display === 'none') && 
-                        (!companyModal || companyModal.style.display === 'none')) {
-                        modalOverlay.style.display = 'none';
-                    }
-                }, 300);
             }
             
             // Profile tab switching
-            profileTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs and content
-                    profileTabs.forEach(t => t.classList.remove('active'));
-                    profileTabContents.forEach(c => c.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                    
-                    // Show corresponding content
-                    const tabName = this.getAttribute('data-tab');
-                    document.getElementById(`${tabName}-tab`).classList.add('active');
-                });
-            });
+            const profileTabs = document.querySelectorAll('.profile-tab');
+            const profileTabContents = document.querySelectorAll('.profile-tab-content');
             
-            // Avatar customization
-            const avatarOptions = document.querySelectorAll('.option-item');
-            const avatarFigure = document.querySelector('.avatar-figure');
-            const avatarBackground = document.querySelector('.avatar-background');
-            const avatarHat = document.querySelector('.avatar-accessory.hat');
-            const avatarGlasses = document.querySelector('.avatar-accessory.glasses');
-            
-            avatarOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const type = this.getAttribute('data-type');
-                    const value = this.getAttribute('data-value');
-                    
-                    // Remove active class from all options of this type
-                    document.querySelectorAll(`.option-item[data-type="${type}"]`).forEach(item => {
-                        item.classList.remove('active');
+            if (profileTabs && profileTabContents) {
+                profileTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Remove active class from all tabs and content
+                        profileTabs.forEach(t => t.classList.remove('active'));
+                        profileTabContents.forEach(c => c.classList.remove('active'));
+                        
+                        // Add active class to clicked tab
+                        this.classList.add('active');
+                        
+                        // Show corresponding content
+                        const tabName = this.getAttribute('data-tab');
+                        const content = document.getElementById(`${tabName}-tab`);
+                        if (content) content.classList.add('active');
                     });
-                    
-                    // Add active class to clicked option
-                    this.classList.add('active');
-                    
-                    // Apply the selected option
-                    switch(type) {
-                        case 'base':
-                            avatarFigure.textContent = value;
-                            break;
-                        case 'hat':
-                            if (value === 'none') {
-                                avatarHat.style.display = 'none';
-                            } else {
-                                avatarHat.style.display = 'block';
-                                avatarHat.textContent = value;
-                            }
-                            break;
-                        case 'glasses':
-                            if (value === 'none') {
-                                avatarGlasses.style.display = 'none';
-                            } else {
-                                avatarGlasses.style.display = 'block';
-                                avatarGlasses.textContent = value;
-                            }
-                            break;
-                        case 'background':
-                            avatarBackground.style.backgroundColor = value;
-                            break;
-                    }
-                    
-                    // Update the mini avatar in the profile button
-                    updateProfileMiniAvatar();
                 });
-            });
+            }
             
             // Function to update the mini avatar in the profile button
             function updateProfileMiniAvatar() {
-                // In a real app, you would save this to the user's profile
-                // For now, we'll just update the icon
                 const miniAvatar = document.querySelector('.profile-avatar-mini');
+                const avatarFigure = document.querySelector('.avatar-figure');
                 if (miniAvatar && avatarFigure) {
                     miniAvatar.textContent = avatarFigure.textContent;
                 }
             }
             
-            // Title selection functionality
-            const titleItems = document.querySelectorAll('.title-item:not(.locked)');
-            const currentTitle = document.querySelector('.current-title');
-            const profileTitle = document.querySelector('.profile-title');
-            
-            titleItems.forEach(title => {
-                title.addEventListener('click', function() {
-                    if (this.classList.contains('locked')) return;
-                    
-                    // Remove active class from all titles
-                    titleItems.forEach(t => t.classList.remove('active'));
-                    
-                    // Add active class to clicked title
-                    this.classList.add('active');
-                    
-                    // Update current title
-                    const titleText = this.getAttribute('data-title');
-                    if (currentTitle) currentTitle.textContent = titleText;
-                    if (profileTitle) profileTitle.textContent = titleText;
-                });
-            });
-            
             // Level up animation (for demonstration)
-            // This would normally be triggered when XP is earned
             function levelUp() {
                 const levelIndicator = document.querySelector('.profile-level-indicator');
                 const currentLevel = document.querySelector('.current-level');
                 const nextLevel = document.querySelector('.next-level');
+                
+                if (!levelIndicator || !currentLevel || !nextLevel) return;
                 
                 // Create and append level up animation elements
                 const levelUpAnim = document.createElement('div');
@@ -3076,7 +3246,7 @@
                 
                 // Show animation
                 setTimeout(() => {
-                    levelUpAnim.style.opacity = 1;
+                    levelUpAnim.style.opacity = '1';
                     levelUpAnim.style.transform = 'translate(-50%, -50%) scale(1)';
                 }, 100);
                 
@@ -3090,13 +3260,16 @@
                     nextLevel.textContent = `Level ${newLevel + 1}`;
                     
                     // Reset XP bar
-                    document.querySelector('.xp-bar').style.width = '10%';
-                    document.querySelector('.xp-info').textContent = '500 / 5,000 XP';
+                    const xpBar = document.querySelector('.xp-bar');
+                    const xpInfo = document.querySelector('.xp-info');
+                    
+                    if (xpBar) xpBar.style.width = '10%';
+                    if (xpInfo) xpInfo.textContent = '500 / 5,000 XP';
                 }, 1500);
                 
                 // Remove animation
                 setTimeout(() => {
-                    levelUpAnim.style.opacity = 0;
+                    levelUpAnim.style.opacity = '0';
                     setTimeout(() => {
                         levelUpAnim.remove();
                     }, 300);
@@ -3104,7 +3277,7 @@
             }
             
             // Optional: Uncomment to see level up animation on page load
-            // setTimeout(levelUp, 2000);
+            // setTimeout(levelUp, 3000);
         });
     </script>
 </body>
