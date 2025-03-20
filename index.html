@@ -2656,8 +2656,15 @@
     </div>
     
     <script>
-        // Simple demo interaction
+               // Simple demo interaction
         document.addEventListener('DOMContentLoaded', function() {
+            // Make sure profile modal is hidden initially
+            const profileModal = document.getElementById('profile-modal');
+            if (profileModal) {
+                profileModal.style.display = 'none';
+                profileModal.style.opacity = '0';
+            }
+            
             const contactCards = document.querySelectorAll('.contact-card');
             const modal = document.getElementById('pet-modal');
             const modalOverlay = document.getElementById('modal-overlay');
@@ -2710,7 +2717,11 @@
                 
                 setTimeout(() => {
                     modal.style.display = 'none';
-                    modalOverlay.style.display = 'none';
+                    // Only hide overlay if no other modals are open
+                    if ((!profileModal || profileModal.style.display === 'none') && 
+                        (!companyModal || companyModal.style.display === 'none')) {
+                        modalOverlay.style.display = 'none';
+                    }
                 }, 300);
             }
             
@@ -2887,8 +2898,9 @@
                 
                 setTimeout(() => {
                     companyModal.style.display = 'none';
-                    if (!document.getElementById('pet-modal').style.display || 
-                        document.getElementById('pet-modal').style.display === 'none') {
+                    // Only hide overlay if no other modals are open
+                    if ((!modal || modal.style.display === 'none') && 
+                        (!profileModal || profileModal.style.display === 'none')) {
                         modalOverlay.style.display = 'none';
                     }
                 }, 300);
@@ -2912,11 +2924,9 @@
                     document.getElementById(`${tabName}-content`).classList.add('active');
                 });
             });
-            // Add this to your existing JavaScript code
-
+            
             // Profile functionality
             const profileButton = document.getElementById('profile-button');
-            const profileModal = document.getElementById('profile-modal');
             const profileModalClose = document.getElementById('profile-modal-close');
             const profileTabs = document.querySelectorAll('.profile-tab');
             const profileTabContents = document.querySelectorAll('.profile-tab-content');
@@ -2934,7 +2944,9 @@
             });
             
             // Close profile modal
-            profileModalClose.addEventListener('click', closeProfileModal);
+            if (profileModalClose) {
+                profileModalClose.addEventListener('click', closeProfileModal);
+            }
             
             function closeProfileModal() {
                 profileModal.style.opacity = 0;
@@ -2942,10 +2954,9 @@
                 
                 setTimeout(() => {
                     profileModal.style.display = 'none';
-                    if (!document.getElementById('pet-modal').style.display || 
-                        document.getElementById('pet-modal').style.display === 'none' &&
-                        !document.getElementById('company-modal').style.display || 
-                        document.getElementById('company-modal').style.display === 'none') {
+                    // Only hide overlay if no other modals are open
+                    if ((!modal || modal.style.display === 'none') && 
+                        (!companyModal || companyModal.style.display === 'none')) {
                         modalOverlay.style.display = 'none';
                     }
                 }, 300);
@@ -3023,7 +3034,9 @@
                 // In a real app, you would save this to the user's profile
                 // For now, we'll just update the icon
                 const miniAvatar = document.querySelector('.profile-avatar-mini');
-                miniAvatar.textContent = avatarFigure.textContent;
+                if (miniAvatar && avatarFigure) {
+                    miniAvatar.textContent = avatarFigure.textContent;
+                }
             }
             
             // Title selection functionality
@@ -3043,8 +3056,8 @@
                     
                     // Update current title
                     const titleText = this.getAttribute('data-title');
-                    currentTitle.textContent = titleText;
-                    profileTitle.textContent = titleText;
+                    if (currentTitle) currentTitle.textContent = titleText;
+                    if (profileTitle) profileTitle.textContent = titleText;
                 });
             });
             
@@ -3089,29 +3102,6 @@
                     }, 300);
                 }, 3000);
             }
-            
-            // Add level up animation style
-            const style = document.createElement('style');
-            style.textContent = `
-                .level-up-animation {
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%) scale(0.5);
-                    background: var(--pastel-orange);
-                    color: white;
-                    font-size: 32px;
-                    font-weight: bold;
-                    padding: 20px 40px;
-                    border-radius: 20px;
-                    box-shadow: 0 5px 30px rgba(0,0,0,0.3);
-                    z-index: 2000;
-                    opacity: 0;
-                    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                    text-align: center;
-                }
-            `;
-            document.head.appendChild(style);
             
             // Optional: Uncomment to see level up animation on page load
             // setTimeout(levelUp, 2000);
