@@ -7,6 +7,526 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Company Modal Styles */
+        .company-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            border: 5px solid var(--pastel-blue);
+            overflow: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: none;
+        }
+
+        .company-details {
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .company-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed var(--pastel-pink);
+            padding-bottom: 15px;
+        }
+
+        .company-modal-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--pastel-purple);
+        }
+
+        .company-modal-type {
+            background: var(--pastel-orange);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 16px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+        }
+
+        .company-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .summary-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #f5f8fa;
+            border-radius: 15px;
+            margin: 0 10px;
+            border: 2px solid var(--pastel-blue);
+        }
+
+        .summary-icon {
+            font-size: 24px;
+            color: var(--pastel-orange);
+            margin-bottom: 10px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--pastel-purple);
+        }
+
+        .summary-label {
+            font-size: 14px;
+            color: #7986CB;
+            margin-top: 5px;
+        }
+
+        .activity-tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .activity-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #7986CB;
+            position: relative;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .activity-tab.active {
+            color: var(--pastel-purple);
+        }
+
+        .activity-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--pastel-blue);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #7986CB;
+            margin-right: 10px;
+        }
+
+        .filter-dropdown {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .filter-dropdown:hover {
+            background: #f5f8fa;
+            border-color: var(--pastel-blue);
+        }
+
+        .filter-text {
+            margin-right: 10px;
+            color: var(--pastel-purple);
+        }
+
+        .activity-content {
+            display: none;
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 30px;
+        }
+
+        .activity-content.active {
+            display: block;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: #f5f8fa;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            color: white;
+        }
+
+        .email-icon {
+            background: #64B5F6;
+        }
+
+        .call-icon {
+            background: #81C784;
+        }
+
+        .meeting-icon {
+            background: #FFB74D;
+        }
+
+        .task-icon {
+            background: #7986CB;
+        }
+
+        .note-icon {
+            background: #4DB6AC;
+        }
+
+        .deal-icon {
+            background: #F06292;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--pastel-purple);
+        }
+
+        .activity-time {
+            font-size: 13px;
+            color: #7986CB;
+            margin-bottom: 5px;
+        }
+
+        .activity-preview {
+            font-size: 14px;
+            color: #616161;
+        }
+
+        .company-contacts {
+            margin-top: 30px;
+        }
+
+        .contacts-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .contact-mini {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            border: 2px solid var(--pastel-pink);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-mini:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .contact-mini-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .contact-mini-name {
+            font-weight: 600;
+            color: var(--pastel-purple);
+        }
+        
+        /* Stats Grid & Pet Details */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-item {
+            background: #f5f8fa;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid var(--pastel-blue);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #7986CB;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+            color: var(--pastel-purple);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 25px 0 15px;
+            color: var(--pastel-purple);
+            border-bottom: 2px dashed var(--pastel-pink);
+            padding-bottom: 8px;
+        }
+        
+        .activity-log {
+            background: #f5f8fa;
+            padding: 15px;
+            border-radius: 15px;
+            max-height: 180px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 2px solid var(--pastel-blue);
+        }
+        
+        .log-entry {
+            padding: 10px 0;
+            font-size: 15px;
+            border-bottom: 1px solid #e5e9f2;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .time-stamp {
+            color: #7986CB;
+            font-size: 13px;
+        }
+        
+        .task-list {
+            margin-bottom: 30px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 15px;
+            border: 1px solid #E0E0E0;
+            transition: all 0.2s ease;
+        }
+        
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .task-checkbox {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid #BBDEFB;
+            margin-right: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .task-complete .task-checkbox {
+            background: #00BFA5;
+            border-color: #00BFA5;
+            color: white;
+        }
+        
+        .task-text {
+            flex: 1;
+            font-size: 16px;
+        }
+        
+        .task-reward {
+            font-size: 13px;
+            background: #FFF9C4;
+            color: #FFA726;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-left: 10px;
+        }
+        
+        .task-complete .task-text {
+            text-decoration: line-through;
+            color: #9E9E9E;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 14px;
+            background: var(--pastel-blue);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            color: var(--pastel-purple);
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn i {
+            margin-right: 8px;
+        }
+        
+        .action-btn:hover {
+            background: #90CAF9;
+            transform: scale(1.05);
+        }
+        
+        .primary-btn {
+            background: #F48FB1;
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background: #F06292;
+        }
+        
+        .accessories-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .accessory-items {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .accessory {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.2s ease;
+            border: 2px dashed var(--pastel-pink);
+        }
+        
+        .accessory:hover {
+            transform: scale(1.15);
+            background: #FFF9C4;
+        }
+        
+        .accessory.active {
+            border: 2px solid var(--pastel-orange);
+            background: #FFF9C4;
+        }
+        
+        .achievements-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .achievements-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .achievement-badge {
+            width: 60px;
+            height: 60px;
+            background: #f5f8fa;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            position: relative;
+            border: 2px solid var(--pastel-blue);
+        }
+        
+        .achievement-badge.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+        
+        .achievement-badge::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--pastel-purple);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        .achievement-badge:hover::after {
+            opacity: 1;
+        }
+
         /* Base Styles */
         :root {
             --pastel-yellow: #FFF8E1;
@@ -1893,12 +2413,292 @@
                     <div class="pet-level">✨ Level 5 ✨</div>
                 </div>
                 
-                <!-- Pet details content -->
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Happiness</div>
+                        <div class="stat-value">85%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Engagement</div>
+                        <div class="stat-value">70%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Deal Progress</div>
+                        <div class="stat-value">$28,000</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">House</div>
+                        <div class="stat-value">TechSolutions</div>
+                    </div>
+                </div>
+                
+                <h3 class="section-title">Recent Activity</h3>
+                <div class="activity-log">
+                    <div class="log-entry">
+                        Sent Email to Emily <span class="time-stamp">Today, 11:23 AM</span>
+                    </div>
+                    <div class="log-entry">
+                        Deal moved to Proposal stage <span class="time-stamp">Today, 10:15 AM</span>
+                    </div>
+                    <div class="log-entry">
+                        Scheduled Meeting <span class="time-stamp">Yesterday, 4:30 PM</span>
+                    </div>
+                    <div class="log-entry">
+                        Deal value increased by $3,000 <span class="time-stamp">3 days ago</span>
+                    </div>
+                    <div class="log-entry">
+                        Phone Call completed <span class="time-stamp">3 days ago</span>
+                    </div>
+                </div>
+                
+                <h3 class="section-title">Daily Tasks</h3>
+                <div class="task-list">
+                    <div class="task-item task-complete">
+                        <div class="task-checkbox">✓</div>
+                        <div class="task-text">Send 5 emails</div>
+                        <div class="task-reward">+10 XP</div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-checkbox"></div>
+                        <div class="task-text">Log 3 calls</div>
+                        <div class="task-reward">Pet Hat</div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-checkbox"></div>
+                        <div class="task-text">Move 1 deal to next stage</div>
+                        <div class="task-reward">+20 XP</div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-checkbox"></div>
+                        <div class="task-text">Schedule follow-up meeting</div>
+                        <div class="task-reward">+15 XP</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn"><i class="fas fa-utensils"></i> Feed Pet</button>
+                    <button class="action-btn"><i class="fas fa-calendar-alt"></i> Schedule Playdate</button>
+                    <button class="action-btn primary-btn"><i class="fas fa-tree"></i> Take to Park</button>
+                </div>
             </div>
             
             <div class="pet-visual">
                 <div class="pet-large">🐶</div>
-                <!-- Pet visual content -->
+                
+                <div class="accessories-section">
+                    <h3 class="section-title">Accessories</h3>
+                    <div class="accessory-items">
+                        <div class="accessory active">🎩</div>
+                        <div class="accessory">🧣</div>
+                        <div class="accessory">👓</div>
+                        <div class="accessory">🎀</div>
+                        <div class="accessory">🦺</div>
+                        <div class="accessory">➕</div>
+                    </div>
+                </div>
+                
+                <div class="achievements-section">
+                    <h3 class="section-title">Achievements</h3>
+                    <div class="achievements-grid">
+                        <div class="achievement-badge" data-tooltip="Deal Closer">💰</div>
+                        <div class="achievement-badge" data-tooltip="Email Champion">✉️</div>
+                        <div class="achievement-badge" data-tooltip="Follow-up Master">🔄</div>
+                        <div class="achievement-badge locked" data-tooltip="Meeting Maven">📅</div>
+                        <div class="achievement-badge locked" data-tooltip="Top Earner">👑</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Company Modal -->
+        <div class="company-modal" id="company-modal">
+            <div class="modal-close" id="company-modal-close"><i class="fas fa-times"></i></div>
+            
+            <div class="company-details">
+                <div class="company-modal-header">
+                    <div class="company-modal-name" id="company-modal-name">TechSolutions LLC</div>
+                    <div class="company-modal-type">Enterprise Client</div>
+                </div>
+                
+                <div class="company-summary">
+                    <div class="summary-item">
+                        <div class="summary-icon"><i class="fas fa-users"></i></div>
+                        <div class="summary-value" id="company-contacts-count">2</div>
+                        <div class="summary-label">Contacts</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="summary-value" id="company-deals-value">$35,500</div>
+                        <div class="summary-label">Total Deals</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-icon"><i class="fas fa-heart"></i></div>
+                        <div class="summary-value" id="company-health">88%</div>
+                        <div class="summary-label">Avg Health</div>
+                    </div>
+                </div>
+                
+                <div class="activity-tabs">
+                    <div class="activity-tab active" data-tab="activity">Activity</div>
+                    <div class="activity-tab" data-tab="notes">Notes</div>
+                    <div class="activity-tab" data-tab="emails">Emails</div>
+                    <div class="activity-tab" data-tab="calls">Calls</div>
+                    <div class="activity-tab" data-tab="tasks">Tasks</div>
+                    <div class="activity-tab" data-tab="meetings">Meetings</div>
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-label">Filter by:</div>
+                    <div class="filter-dropdown">
+                        <span class="filter-text">Filter activity (14/25)</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-dropdown">
+                        <span class="filter-text">All users</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-dropdown">
+                        <span class="filter-text">All teams</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                
+                <div class="activity-content active" id="activity-content">
+                    <div class="activity-item">
+                        <div class="activity-icon email-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Email sent to Emily Johnson</div>
+                            <div class="activity-time">Today, 11:23 AM</div>
+                            <div class="activity-preview">Hi Emily, I wanted to follow up on our discussion about the new software package...</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon deal-icon"><i class="fas fa-handshake"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Deal moved to Proposal stage</div>
+                            <div class="activity-time">Today, 10:15 AM</div>
+                            <div class="activity-preview">Enterprise Software Package - $28,000</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon meeting-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Meeting scheduled with Alex Chen</div>
+                            <div class="activity-time">Yesterday, 4:30 PM</div>
+                            <div class="activity-preview">Product Demo - 3/25/2025 at 2:00 PM</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon call-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Call completed with Emily Johnson</div>
+                            <div class="activity-time">3 days ago</div>
+                            <div class="activity-preview">Discussed implementation timeline and additional requirements</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-content" id="notes-content">
+                    <div class="activity-item">
+                        <div class="activity-icon note-icon"><i class="fas fa-sticky-note"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Meeting Notes: Initial Consultation</div>
+                            <div class="activity-time">Last week</div>
+                            <div class="activity-preview">Client expressed interest in our enterprise package. Key decision makers include Emily (CTO) and Alex (IT Director).</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon note-icon"><i class="fas fa-sticky-note"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Follow-up Strategy</div>
+                            <div class="activity-time">2 weeks ago</div>
+                            <div class="activity-preview">Plan to schedule demo next week. Focus on security features and API integration capabilities.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-content" id="emails-content">
+                    <div class="activity-item">
+                        <div class="activity-icon email-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Email sent to Emily Johnson</div>
+                            <div class="activity-time">Today, 11:23 AM</div>
+                            <div class="activity-preview">Hi Emily, I wanted to follow up on our discussion about the new software package...</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon email-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Email received from Alex Chen</div>
+                            <div class="activity-time">2 days ago</div>
+                            <div class="activity-preview">Thanks for your proposal. I've shared it with the team and we have a few questions...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-content" id="calls-content">
+                    <div class="activity-item">
+                        <div class="activity-icon call-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Call completed with Emily Johnson</div>
+                            <div class="activity-time">3 days ago</div>
+                            <div class="activity-preview">Duration: 24 minutes - Discussed implementation timeline and additional requirements</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon call-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Call scheduled with Alex Chen</div>
+                            <div class="activity-time">Tomorrow, 10:00 AM</div>
+                            <div class="activity-preview">Technical discussion about API requirements</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-content" id="tasks-content">
+                    <div class="activity-item">
+                        <div class="activity-icon task-icon"><i class="fas fa-tasks"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Prepare technical specification document</div>
+                            <div class="activity-time">Due: Tomorrow</div>
+                            <div class="activity-preview">Create detailed overview of implementation requirements</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon task-icon"><i class="fas fa-tasks"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Schedule follow-up demo</div>
+                            <div class="activity-time">Due: Next week</div>
+                            <div class="activity-preview">Coordinate with product team for customized demonstration</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-content" id="meetings-content">
+                    <div class="activity-item">
+                        <div class="activity-icon meeting-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Product Demo with TechSolutions Team</div>
+                            <div class="activity-time">03/25/2025, 2:00 PM</div>
+                            <div class="activity-preview">Attendees: Emily Johnson, Alex Chen, and 3 others</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon meeting-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="activity-details">
+                            <div class="activity-title">Contract Review Meeting</div>
+                            <div class="activity-time">03/30/2025, 11:00 AM</div>
+                            <div class="activity-preview">Final review of contract terms before signing</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="company-contacts">
+                    <h3 class="section-title">Company Contacts</h3>
+                    <div class="contacts-list" id="company-contacts-list">
+                        <!-- Contact cards will be populated dynamically -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2015,8 +2815,10 @@
                     window.getComputedStyle(elements.petModal).display !== 'none';
                 const profileModalVisible = elements.profileModal && 
                     window.getComputedStyle(elements.profileModal).display !== 'none';
+                const companyModalVisible = elements.companyModal && 
+                    window.getComputedStyle(elements.companyModal).display !== 'none';
                 
-                if (!petModalVisible && !profileModalVisible) {
+                if (!petModalVisible && !profileModalVisible && !companyModalVisible) {
                     elements.modalOverlay.style.display = 'none';
                 }
             }
@@ -2045,6 +2847,162 @@
                 }
             }
             
+            // Add company modal elements to cached elements
+            elements.companyModal = document.getElementById('company-modal');
+            elements.companyModalClose = document.getElementById('company-modal-close');
+            elements.companyContactsList = document.getElementById('company-contacts-list');
+            
+            // Company data (sample data that would eventually come from HubSpot)
+            const companyData = {
+                "TechSolutions LLC": {
+                    type: "Enterprise Client",
+                    contacts: 2,
+                    totalDeals: "$35,500",
+                    health: "88%",
+                    contactsList: [
+                        { name: "Emily Johnson", icon: "🐶", id: "1" },
+                        { name: "Alex Chen", icon: "🐸", id: "7" }
+                    ]
+                },
+                "Acme Inc.": {
+                    type: "Mid-Market Client",
+                    contacts: 1,
+                    totalDeals: "$12,500",
+                    health: "78%",
+                    contactsList: [
+                        { name: "John Smith", icon: "🐱", id: "2" }
+                    ]
+                },
+                "Global Industries": {
+                    type: "Enterprise Prospect",
+                    contacts: 2,
+                    totalDeals: "$0",
+                    health: "32%",
+                    contactsList: [
+                        { name: "Robert Brown", icon: "🐰", id: "3" },
+                        { name: "Lisa Wong", icon: "🦁", id: "8" }
+                    ]
+                },
+                "Creative Studios": {
+                    type: "Small Business",
+                    contacts: 1,
+                    totalDeals: "$6,500",
+                    health: "53%",
+                    contactsList: [
+                        { name: "Sarah Wilson", icon: "🦊", id: "4" }
+                    ]
+                }
+            };
+            
+            // Function to open company modal
+            function openCompanyModal(companyName) {
+                if (!elements.companyModal || !elements.modalOverlay) return;
+                
+                // Get company data
+                const company = companyData[companyName] || {
+                    type: "Unknown",
+                    contacts: 0,
+                    totalDeals: "$0",
+                    health: "0%",
+                    contactsList: []
+                };
+                
+                // Set company data in modal
+                const nameElement = document.getElementById('company-modal-name');
+                const typeElement = document.querySelector('.company-modal-type');
+                const contactsCountElement = document.getElementById('company-contacts-count');
+                const dealsValueElement = document.getElementById('company-deals-value');
+                const healthElement = document.getElementById('company-health');
+                
+                if (nameElement) nameElement.textContent = companyName;
+                if (typeElement) typeElement.textContent = company.type;
+                if (contactsCountElement) contactsCountElement.textContent = company.contacts;
+                if (dealsValueElement) dealsValueElement.textContent = company.totalDeals;
+                if (healthElement) healthElement.textContent = company.health;
+                
+                // Populate contacts list
+                if (elements.companyContactsList) {
+                    elements.companyContactsList.innerHTML = '';
+                    
+                    company.contactsList.forEach(contact => {
+                        const contactElement = document.createElement('div');
+                        contactElement.className = 'contact-mini';
+                        contactElement.innerHTML = `
+                            <div class="contact-mini-icon">${contact.icon}</div>
+                            <div class="contact-mini-name">${contact.name}</div>
+                        `;
+                        
+                        // Add click handler to open pet modal
+                        contactElement.addEventListener('click', function() {
+                            closeCompanyModal();
+                            openPetModal(contact.icon);
+                        });
+                        
+                        elements.companyContactsList.appendChild(contactElement);
+                    });
+                }
+                
+                // Show modal
+                elements.modalOverlay.style.display = 'block';
+                elements.companyModal.style.display = 'block';
+                
+                // Force reflow
+                void elements.companyModal.offsetWidth;
+                
+                // Start transition
+                elements.modalOverlay.style.opacity = '1';
+                elements.companyModal.style.opacity = '1';
+            }
+            
+            function closeCompanyModal() {
+                if (!elements.companyModal) return;
+                
+                elements.companyModal.style.opacity = '0';
+                if (elements.modalOverlay) elements.modalOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    elements.companyModal.style.display = 'none';
+                    updateOverlayVisibility();
+                }, 300);
+            }
+            
+            // Handle accessory clicks
+            document.querySelectorAll('.accessory').forEach(accessory => {
+                accessory.addEventListener('click', function() {
+                    document.querySelectorAll('.accessory').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Handle activity tab switching
+            document.querySelectorAll('.activity-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    document.querySelectorAll('.activity-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update active content
+                    document.querySelectorAll('.activity-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(`${tabName}-content`)?.classList.add('active');
+                });
+            });
+            
+            // Handle task checkbox clicks
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    const taskItem = this.closest('.task-item');
+                    taskItem.classList.toggle('task-complete');
+                    
+                    if (taskItem.classList.contains('task-complete')) {
+                        this.innerHTML = '✓';
+                    } else {
+                        this.innerHTML = '';
+                    }
+                });
+            });
+            
             // Event delegation for better performance
             document.body.addEventListener('click', function(e) {
                 const target = e.target;
@@ -2063,6 +3021,20 @@
                 // Pet modal close button
                 else if (target.closest('#modal-close')) {
                     closePetModal();
+                }
+                
+                // Company modal close button
+                else if (target.closest('#company-modal-close')) {
+                    closeCompanyModal();
+                }
+                
+                // Company card clicks
+                else if (target.closest('.company-card')) {
+                    const card = target.closest('.company-card');
+                    const companyName = card.querySelector('.company-name');
+                    if (companyName) {
+                        openCompanyModal(companyName.textContent);
+                    }
                 }
                 
                 // Contact cards
